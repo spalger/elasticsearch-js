@@ -1,5 +1,7 @@
 # elasticsearch.js
 
+[![Join the chat at https://gitter.im/spalger/elasticsearch-js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/spalger/elasticsearch-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The official low-level Elasticsearch client for Node.js and the browser.
 
 [![Build Status](http://img.shields.io/travis/elastic/elasticsearch-js/2.4.svg?style=flat-square)](https://travis-ci.org/elastic/elasticsearch-js?branch=3.1)

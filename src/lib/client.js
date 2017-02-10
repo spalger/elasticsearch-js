@@ -33,13 +33,6 @@ var _ = require('./utils');
 function Client(config) {
   config = config || {};
 
-  if (config.__reused) {
-    throw new Error('Do not reuse objects to configure the elasticsearch Client class: ' +
-      'https://github.com/elasticsearch/elasticsearch-js/issues/33');
-  } else {
-    config.__reused = true;
-  }
-
   function EsApiClient() {
     // our client will log minimally by default
     if (!config.hasOwnProperty('log')) {
@@ -55,12 +48,6 @@ function Client(config) {
     };
 
     this.transport = new Transport(config);
-
-    _.each(EsApiClient.prototype, _.bind(function (Fn, prop) {
-      if (Fn.prototype instanceof clientAction.ApiNamespace) {
-        this[prop] = new Fn(this.transport, this);
-      }
-    }, this));
   }
 
   EsApiClient.prototype = {};

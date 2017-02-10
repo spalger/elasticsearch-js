@@ -61,44 +61,11 @@ function Client(config) {
         this[prop] = new Fn(this.transport, this);
       }
     }, this));
-
-    delete this._namespaces;
   }
 
+  EsApiClient.prototype = {};
 
-  EsApiClient.prototype = _.funcEnum(config, 'apiVersion', Client.apis, '_default');
-  if (!config.sniffEndpoint && EsApiClient.prototype === Client.apis['0.90']) {
-    config.sniffEndpoint = '/_cluster/nodes';
-  }
-
-  var Constructor = EsApiClient;
-
-  if (config.plugins) {
-    Constructor.prototype = _.cloneDeep(Constructor.prototype);
-
-    _.each(config.plugins, function (setup) {
-      Constructor = setup(Constructor, config, {
-        apis: require('./apis'),
-        connectors: require('./connectors'),
-        loggers: require('./loggers'),
-        selectors: require('./selectors'),
-        serializers: require('./serializers'),
-        Client: require('./client'),
-        clientAction: clientAction,
-        Connection: require('./connection'),
-        ConnectionPool: require('./connection_pool'),
-        Errors: require('./errors'),
-        Host: require('./host'),
-        Log: require('./log'),
-        Logger: require('./logger'),
-        NodesToHost: require('./nodes_to_host'),
-        Transport: require('./transport'),
-        utils: require('./utils')
-      }) || Constructor;
-    });
-  }
-
-  return new Constructor();
+  return new EsApiClient();
 }
 
 Client.apis = require('./apis');

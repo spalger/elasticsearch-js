@@ -1,5 +1,7 @@
 # elasticsearch.js 12.0.1
 
+[![Join the chat at https://gitter.im/spalger/elasticsearch-js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/spalger/elasticsearch-js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The official low-level Elasticsearch client for Node.js and the browser.
 
 [![Coverage Status](http://img.shields.io/coveralls/elastic/elasticsearch-js/master.svg?style=flat-square)](https://coveralls.io/r/elastic/elasticsearch-js?branch=master)

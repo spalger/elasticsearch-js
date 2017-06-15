@@ -76,7 +76,7 @@ Options in the browser :::
 +
 `config` is the config object that was passed to the `elasticsearch.Client` constructor.
 +
-`components` is a map of the internal classes for this version of the elasticsearch client. The values on this object are listed https://github.com/elastic/elasticsearch-js/blob/master/src/lib/client.js#L80[here].
+`components` is a map of the internal classes for this version of the elasticsearch client. The values on this object are listed https://github.com/elastic/elasticsearch-js/blob/master/src/elasticsearch-js/lib/client.js#L80[here].
 
 
 `sniffOnStart`[[config-sniff-on-start]]:: `Boolean` -- Should the client attempt to detect the rest of the cluster when it is first instantiated?
@@ -237,14 +237,14 @@ var client = new elasticsearch.Client({
 `nodesToHostCallback`[[config-nodes-to-host-callback]]:: `Function` - This function will receive the list of nodes returned from the `_cluster/nodes` API during a sniff operation. The function should return an array of objects which match the <<config-hosts,specification for the `hosts` config>>.
 
 Default:::
-see https://github.com/elasticsearch/elasticsearch-js/blob/master/src/lib/nodes_to_host.js[nodes_to_host.js]
+see https://github.com/elasticsearch/elasticsearch-js/blob/master/src/elasticsearch-js/lib/nodes_to_host.js[nodes_to_host.js]
 
 
 
 
 `createNodeAgent`[[config-create-node-agent]]:: `Function` -- Override the way that the client creates node.js `Agent`[https://nodejs.org/api/http.html#http_class_http_agent] objects. The value of this property will be executed every time a new Node is added to the client (either from the initial seed or from sniffing) and can return any value that node's http(s) module accepts as `agent:` configuration.
 +
-The function is called with two arguments, first an `HttpConnector`[http://github.com/spalger/elasticsearch-js/blob/master/src/lib/connectors/http.js] object and the second the config object initially passed when creating the client.
+The function is called with two arguments, first an `HttpConnector`[http://github.com/spalger/elasticsearch-js/blob/master/src/elasticsearch-js/lib/connectors/http.js] object and the second the config object initially passed when creating the client.
 
 Default::: `HttpConnector#createAgent()`
 

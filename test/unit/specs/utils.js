@@ -1,4 +1,4 @@
-const _ = require('../../../src/lib/utils');
+const _ = require('../../../src/elasticsearch-js/lib/utils');
 const expect = require('expect.js');
 
 const stub = require('../../utils/auto_release_stub').make();

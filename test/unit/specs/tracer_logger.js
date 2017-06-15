@@ -1,7 +1,7 @@
 describe('Tracer Logger', function () {
 
-  const Log = require('../../../src/lib/log');
-  const TracerLogger = require('../../../src/lib/loggers/tracer');
+  const Log = require('../../../src/elasticsearch-js/lib/log');
+  const TracerLogger = require('../../../src/elasticsearch-js/lib/loggers/tracer');
   const expect = require('expect.js');
   let parentLog;
 

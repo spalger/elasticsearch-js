@@ -1,4 +1,4 @@
-const Host = require('../../../src/lib/host');
+const Host = require('../../../src/elasticsearch-js/lib/host');
 const expect = require('expect.js');
 const url = require('url');
 const expectSubObject = require('../../utils/expect_sub_object');

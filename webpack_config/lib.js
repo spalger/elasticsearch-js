@@ -14,7 +14,7 @@ function jsLoader() {
   return {
     loader: 'babel-loader',
     test: /\.js$/,
-    include: rel('src'),
+    include: rel('src/elasticsearch-js'),
   };
 }
 

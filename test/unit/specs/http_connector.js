@@ -8,9 +8,9 @@ describe('Http Connector', function () {
   const https = require('https');
   const AgentKeepAlive = require('agentkeepalive');
 
-  const Host = require('../../../src/lib/host');
-  const HttpConnection = require('../../../src/lib/connectors/http');
-  const ConnectionAbstract = require('../../../src/lib/connection');
+  const Host = require('../../../src/elasticsearch-js/lib/host');
+  const HttpConnection = require('../../../src/elasticsearch-js/lib/connectors/http');
+  const ConnectionAbstract = require('../../../src/elasticsearch-js/lib/connection');
 
   const expectSubObject = require('../../utils/expect_sub_object');
   const MockRequest = require('../../mocks/request');

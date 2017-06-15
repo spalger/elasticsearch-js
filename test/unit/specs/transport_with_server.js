@@ -1,6 +1,6 @@
-const Transport = require('../../../src/lib/transport');
-const ConnectionPool = require('../../../src/lib/connection_pool');
-const errors = require('../../../src/lib/errors');
+const Transport = require('../../../src/elasticsearch-js/lib/transport');
+const ConnectionPool = require('../../../src/elasticsearch-js/lib/connection_pool');
+const errors = require('../../../src/elasticsearch-js/lib/errors');
 const expect = require('expect.js');
 
 const sinon = require('sinon');

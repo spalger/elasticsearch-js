@@ -1,5 +1,5 @@
 const expect = require('expect.js');
-const Log = require('../../src/lib/log');
+const Log = require('../../src/elasticsearch-js/lib/log');
 const now = new Date('2013-03-01T00:00:00Z');
 const sinon = require('sinon');
 

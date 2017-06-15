@@ -1,5 +1,5 @@
 const clock = require('sinon').useFakeTimers();
-const Client = require('../../src/elasticsearch').Client;
+const Client = require('../../src/elasticsearch-js/elasticsearch').Client;
 const _ = require('lodash');
 const times = require('async').times;
 

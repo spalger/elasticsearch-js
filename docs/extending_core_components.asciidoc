@@ -12,7 +12,7 @@ For example, you can extend the `HttpConnector` to force the default HTTP method
 ---------------
 var elasticsearch = require('elasticsearch');
 var util = require('util');
-var HttpConnector = require('elasticsearch/src/lib/connectors/http');
+var HttpConnector = require('elasticsearch/lib/connectors/http');
 
 function MyHttpConnector(host, config) {
   HttpConnector.call(this, host, config);

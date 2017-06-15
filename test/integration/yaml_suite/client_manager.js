@@ -6,10 +6,10 @@ let es;
 if (BROWSER) {
   es = window.elasticsearch;
 } else {
-  es = require('../../../src/elasticsearch');
+  es = require('../../../src/elasticsearch-js/elasticsearch');
 }
 
-const _ = require('../../../src/lib/utils');
+const _ = require('../../../src/elasticsearch-js/lib/utils');
 const path = require('path');
 const fs = require('fs');
 const fromRoot = _.bindKey(path, 'join', require('find-root')(__dirname));

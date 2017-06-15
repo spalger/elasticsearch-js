@@ -1,5 +1,5 @@
 
-const _ = require('../../../src/lib/utils');
+const _ = require('../../../src/elasticsearch-js/lib/utils');
 const utils = require('../../../grunt/utils');
 const fs = require('fs');
 const path = require('path');

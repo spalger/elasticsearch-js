@@ -1,5 +1,5 @@
-const ca = require('../../../src/lib/client_action').factory;
-const proxy = require('../../../src/lib/client_action').proxyFactory;
+const ca = require('../../../src/elasticsearch-js/lib/client_action').factory;
+const proxy = require('../../../src/elasticsearch-js/lib/client_action').proxyFactory;
 const expect = require('expect.js');
 const _ = require('lodash');
 const Promise = require('bluebird');

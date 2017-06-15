@@ -1,9 +1,9 @@
-const ConnectionAbstract = require('../../../src/lib/connection');
-const Host = require('../../../src/lib/host');
+const ConnectionAbstract = require('../../../src/elasticsearch-js/lib/connection');
+const Host = require('../../../src/elasticsearch-js/lib/host');
 const sinon = require('sinon');
 const expect = require('expect.js');
 const _ = require('lodash');
-const errors = require('../../../src/lib/errors');
+const errors = require('../../../src/elasticsearch-js/lib/errors');
 
 const stub = require('../../utils/auto_release_stub').make();
 

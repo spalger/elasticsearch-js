@@ -1,6 +1,11 @@
 [[changelog]]
 == Changelog
 
+=== 14.0.0 (??)
+
+  * Elasticsearch-js only supports https://github.com/nodejs/LTS#lts-schedule1[node.js 4.8.3] and up
+  * The location of most internal files have changed
+
 === 13.0.1 (May 9 2017)
 
   * Fixed the way that `clearScroll` handles it's `scrollId` param https://github.com/elastic/elasticsearch-js/pull/541[#541]
@@ -24,7 +29,7 @@ Elasticsearch now guarantees backwards compatibility within a specific major ver
 If you use an older version of Elasticsearch 1.x or 2.x, please consider upgrading to get the latest features and bug fixes (https://www.elastic.co/support_policy[see section 7.1 of the support policy]). If you cannot upgrade then you have two options:
   
   1. Use the `apiVersion` that matches the **major** version of your Elasticsearch install (1.4 => 1.7, 2.0 => 2.4, etc.). This definition may include new APIs or parameters that are mentioned in the docs but not actually available in your Elasticsearch version, but any methods or parameter you were using before 13.0 should work perfectly.
-  2. Download the API definition file for the version you are using from the https://github.com/elastic/elasticsearch-js/tree/da99740e1196068bdc03f830a0964cf5f05f0925/src/lib/apis[12.1.1 source], and then attach it to the client like so:
+  2. Download the API definition file for the version you are using from the https://github.com/elastic/elasticsearch-js/tree/da99740e1196068bdc03f830a0964cf5f05f0925/src/elasticsearch-js/lib/apis[12.1.1 source], and then attach it to the client like so:
 +  
 [source,js]
 --------
@@ -83,7 +88,7 @@ const client = new elasticsearch.Client({
 
 === 6.1 (Aug 18 2015)
   * Added experimental support for apiVersion `"2.0"`
-  * Added support for https://github.com/elastic/elasticsearch-js/blob/ea6721127fb239951fb86ac3b386e182b26f683c/src/lib/errors.js#L94-L138[many more status codes] so that "unknown error" is far less likely.
+  * Added support for https://github.com/elastic/elasticsearch-js/blob/ea6721127fb239951fb86ac3b386e182b26f683c/src/elasticsearch-js/lib/errors.js#L94-L138[many more status codes] so that "unknown error" is far less likely.
 
 === 6.0 (Aug 4 2015)
   * Added apiVersion `"1.7"`, which is now the default

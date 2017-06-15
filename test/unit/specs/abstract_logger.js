@@ -1,7 +1,7 @@
 describe('Logger Abstract', function () {
   const expect = require('expect.js');
-  const Log = require('../../../src/lib/log');
-  const LoggerAbstract = require('../../../src/lib/logger');
+  const Log = require('../../../src/elasticsearch-js/lib/log');
+  const LoggerAbstract = require('../../../src/elasticsearch-js/lib/logger');
 
   let parentLog;
 

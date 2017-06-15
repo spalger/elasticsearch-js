@@ -2,8 +2,8 @@ describe('Client instances creation', function () {
   const stream = require('stream');
   const util = require('util');
 
-  const es = require('../../../src/elasticsearch');
-  const apis = require('../../../src/lib/apis');
+  const es = require('../../../src/elasticsearch-js/elasticsearch');
+  const apis = require('../../../src/elasticsearch-js/lib/apis');
   const expect = require('expect.js');
   const stub = require('../../utils/auto_release_stub').make();
   let client;

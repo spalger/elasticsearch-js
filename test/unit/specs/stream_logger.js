@@ -1,10 +1,10 @@
 describe('Stream Logger', function () {
-  const Log = require('../../../src/lib/log');
-  const StreamLogger = require('../../../src/lib/loggers/stream');
+  const Log = require('../../../src/elasticsearch-js/lib/log');
+  const StreamLogger = require('../../../src/elasticsearch-js/lib/loggers/stream');
   const MockWritableStream = require('../../mocks/writable_stream');
   const once = require('events').EventEmitter.prototype.once;
   const stream = new MockWritableStream();
-  const _ = require('../../../src/lib/utils');
+  const _ = require('../../../src/elasticsearch-js/lib/utils');
   const expect = require('expect.js');
   let parentLog;
 

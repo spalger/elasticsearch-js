@@ -3,7 +3,7 @@ module.exports = function (branch) {
   const YamlFile = require('./yaml_file');
   const root = require('find-root')(__dirname);
   const rootReq = function (loc) { return require(path.join(root, loc)); };
-  const _ = rootReq('src/lib/utils');
+  const _ = rootReq('src/elasticsearch-js/lib/utils');
   const clientManager = require('./client_manager');
 
   const port = parseInt(process.env.ES_PORT || 9200, 10);

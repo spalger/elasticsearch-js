@@ -9,7 +9,7 @@ module.exports = function (branch, ES_BRANCHES_DIR, YAML_TESTS_DIR, done) {
   const path = require('path');
   const mkdirp = require('mkdirp');
   const fromRoot = path.join.bind(path, require('find-root')(__dirname));
-  const _ = require(fromRoot('src/lib/utils'));
+  const _ = require(fromRoot('src/elasticsearch-js/lib/utils'));
   const tests = {}; // populated in readYamlTests
 
   const RUN_SCRIPT_PATH = fromRoot('test/integration/yaml_suite/run');

@@ -2,7 +2,7 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 const { ignoreLoader, rel } = require('./lib');
 
 module.exports = {
-  context: rel('src'),
+  context: rel('src/elasticsearch-js'),
   entry: './elasticsearch.jquery.js',
   output: {
     filename: 'elasticsearch.jquery.js',
@@ -11,8 +11,8 @@ module.exports = {
   module: {
     loaders: [
       ignoreLoader([
-        'src/lib/connectors/angular.js',
-        'src/lib/connectors/xhr.js',
+        'src/elasticsearch-js/lib/connectors/angular.js',
+        'src/elasticsearch-js/lib/connectors/xhr.js',
         'promise/lib/es6-extensions',
       ]),
     ],

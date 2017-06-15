@@ -1,7 +1,7 @@
 const root = require('find-root')(__dirname);
 const rel = require('path').resolve.bind(null, root);
 const rootReq = function (p) { return require(rel(p)); };
-const _ = rootReq('src/lib/utils');
+const _ = rootReq('src/elasticsearch-js/lib/utils');
 const grunt = require('grunt');
 
 const JENKINS_REPORTER = rel('test/utils/jenkins-reporter.js');

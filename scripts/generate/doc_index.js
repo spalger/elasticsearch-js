@@ -1,5 +1,5 @@
 module.exports = function (done) {
-  const _ = require('../../src/lib/utils');
+  const _ = require('../../src/elasticsearch-js/lib/utils');
   const utils = require('../../grunt/utils');
 
   const chalk = require('chalk');

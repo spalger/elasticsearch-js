@@ -196,7 +196,7 @@ Log.join = function (arrayish) {
  * @method addOutput
  * @param {object} config - An object with config options for the logger.
  * @param {String} [config.type=stdio] - The name of an output/logger. Options
- *   can be found in the `src/loggers` directory.
+ *   can be found in the `src/elasticsearch-js/loggers` directory.
  * @param {String|ArrayOfStrings} [config.level|config.levels=warning] - The levels to output
  *   to this logger, when an array is specified no levels other than the ones
  *   specified will be listened to. When a string is specified, that and all lower

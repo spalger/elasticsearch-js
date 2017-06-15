@@ -1,6 +1,6 @@
-const Transport = require('../../../src/lib/transport');
-const Host = require('../../../src/lib/host');
-const errors = require('../../../src/lib/errors');
+const Transport = require('../../../src/elasticsearch-js/lib/transport');
+const Host = require('../../../src/elasticsearch-js/lib/host');
+const errors = require('../../../src/elasticsearch-js/lib/errors');
 
 const sinon = require('sinon');
 const expect = require('expect.js');
@@ -285,7 +285,7 @@ describe('Transport Class', function () {
 
     describe('randomizeHosts options', function () {
       it('calls _.shuffle be default', function () {
-        const _ = require('../../../src/lib/utils');
+        const _ = require('../../../src/elasticsearch-js/lib/utils');
         stub(Transport.connectionPools.main.prototype, 'setHosts');
         stub(_, 'shuffle');
         new Transport({
@@ -295,7 +295,7 @@ describe('Transport Class', function () {
         expect(_.shuffle.callCount).to.eql(1);
       });
       it('skips the call to _.shuffle when false', function () {
-        const _ = require('../../../src/lib/utils');
+        const _ = require('../../../src/elasticsearch-js/lib/utils');
         stub(Transport.connectionPools.main.prototype, 'setHosts');
         stub(_, 'shuffle');
         new Transport({
@@ -595,7 +595,7 @@ describe('Transport Class', function () {
       // create a test that checks N retries
       function testRetries(retries) {
         return function (done) {
-          const randomSelector = require('../../../src/lib/selectors/random');
+          const randomSelector = require('../../../src/elasticsearch-js/lib/selectors/random');
           let connections;
           let attempts = 0;
           function failRequest(params, cb) {

@@ -30,7 +30,7 @@ let argv = require('optimist')
 const path = require('path');
 const fromRoot = path.join.bind(path, require('find-root')(__dirname));
 const utils = require(fromRoot('grunt/utils'));
-const _ = require(fromRoot('src/lib/utils'));
+const _ = require(fromRoot('src/elasticsearch-js/lib/utils'));
 const esUrl = process.env.ES_REPO
   ? path.resolve(process.cwd(), process.env.ES_REPO)
   : 'https://github.com/elastic/elasticsearch.git';

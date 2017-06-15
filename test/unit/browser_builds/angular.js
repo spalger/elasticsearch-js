@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 
 describe('Angular esFactory', function () {
   before(function () {
-    require('../../../src/elasticsearch.angular.js');
+    require('../../../src/elasticsearch-js/elasticsearch.angular.js');
   });
 
   let esFactory;

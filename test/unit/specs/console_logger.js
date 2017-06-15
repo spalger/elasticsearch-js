@@ -1,5 +1,5 @@
-const Log = require('../../../src/lib/log');
-const ConsoleLogger = require('../../../src/lib/loggers/console');
+const Log = require('../../../src/elasticsearch-js/lib/log');
+const ConsoleLogger = require('../../../src/elasticsearch-js/lib/loggers/console');
 const sinon = require('sinon');
 const expect = require('expect.js');
 let parentLog;

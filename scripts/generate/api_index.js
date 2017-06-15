@@ -1,13 +1,13 @@
 module.exports = function (done) {
-  const _ = require('../../src/lib/utils');
+  const _ = require('../../src/elasticsearch-js/lib/utils');
   const utils = require('../../grunt/utils');
 
   const chalk = require('chalk');
   const fromRoot = _.partial(require('path').join, require('find-root')(__dirname));
   const write = require('fs').writeFileSync;
 
-  const nodeApiIndex = fromRoot('src/lib/apis/index.js');
-  const browserApiIndex = fromRoot('src/lib/apis/browser_index.js');
+  const nodeApiIndex = fromRoot('src/elasticsearch-js/lib/apis/index.js');
+  const browserApiIndex = fromRoot('src/elasticsearch-js/lib/apis/browser_index.js');
 
   write(nodeApiIndex, require('./templates').apiIndex({
     branches: utils.branches

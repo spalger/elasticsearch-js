@@ -1,4 +1,4 @@
-const _ = require('../src/lib/utils');
+const _ = require('../src/elasticsearch-js/lib/utils');
 
 const root = require('find-root')(__dirname);
 const pkg = require(root + '/package.json');

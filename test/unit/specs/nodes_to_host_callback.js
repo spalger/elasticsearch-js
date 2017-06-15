@@ -1,5 +1,5 @@
 describe('Nodes to host callback', function () {
-  const callback = require('../../../src/lib/nodes_to_host');
+  const callback = require('../../../src/elasticsearch-js/lib/nodes_to_host');
   const expect = require('expect.js');
 
   const nodes90 = require('../../fixtures/short_node_list.0.90.json');

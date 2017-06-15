@@ -1,5 +1,5 @@
 *
-!src/**/*
+!src/elasticsearch-js/**/*
 !package.json
 !LICENSE
 !README.md

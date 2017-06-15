@@ -3,7 +3,7 @@ module.exports = function (branch, done) {
    * Read the API actions form the rest-api-spec repo.
    * @type {[type]}
    */
-  const _ = require('../../src/lib/utils');
+  const _ = require('../../src/elasticsearch-js/lib/utils');
   const utils = require('../../grunt/utils');
   const fs = require('fs');
   const async = require('async');
@@ -135,7 +135,7 @@ module.exports = function (branch, done) {
   }
 
   function writeApiFile(done) {
-    const outputPath = fromRoot('src/lib/apis/' + _.snakeCase(branch) + '.js');
+    const outputPath = fromRoot('src/elasticsearch-js/lib/apis/' + _.snakeCase(branch) + '.js');
     fs.writeFileSync(outputPath, templates.apiFile(apiSpec));
     console.log(chalk.white.bold('wrote'), apiSpec.actions.length, 'api actions to', outputPath);
     done();

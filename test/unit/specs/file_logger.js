@@ -1,8 +1,8 @@
 describe('File Logger', function () {
-  const Log = require('../../../src/lib/log');
-  const FileLogger = require('../../../src/lib/loggers/file');
+  const Log = require('../../../src/elasticsearch-js/lib/log');
+  const FileLogger = require('../../../src/elasticsearch-js/lib/loggers/file');
   const once = require('events').EventEmitter.prototype.once;
-  const _ = require('../../../src/lib/utils');
+  const _ = require('../../../src/elasticsearch-js/lib/utils');
   let parentLog;
   let logger;
   const expect = require('expect.js');

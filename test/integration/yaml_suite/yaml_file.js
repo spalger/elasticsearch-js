@@ -8,7 +8,7 @@ module.exports = YamlFile;
 
 const YamlDoc = require('./yaml_doc');
 const clientManager = require('./client_manager');
-const _ = require('../../../src/lib/utils');
+const _ = require('../../../src/elasticsearch-js/lib/utils');
 const async = require('async');
 
 function YamlFile(filename, docs) {

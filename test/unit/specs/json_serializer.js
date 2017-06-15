@@ -1,5 +1,5 @@
 describe('JSON serializer', function () {
-  const JsonSerializer = require('../../../src/lib/serializers/json');
+  const JsonSerializer = require('../../../src/elasticsearch-js/lib/serializers/json');
   const expect = require('expect.js');
   const sinon = require('sinon');
   const stub = require('../../utils/auto_release_stub').make();

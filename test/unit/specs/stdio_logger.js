@@ -1,7 +1,7 @@
 describe('Stdio Logger', function () {
 
-  const Log = require('../../../src/lib/log');
-  const StdioLogger = require('../../../src/lib/loggers/stdio');
+  const Log = require('../../../src/elasticsearch-js/lib/log');
+  const StdioLogger = require('../../../src/elasticsearch-js/lib/loggers/stdio');
   const expect = require('expect.js');
   const sinon = require('sinon');
   let parentLog;

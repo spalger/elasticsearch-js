@@ -5,7 +5,7 @@
   },
   "name": "elasticsearch",
   "description": "The official low-level Elasticsearch client for Node.js and the browser.",
-  "main": "src/elasticsearch.js",
+  "main": "src/elasticsearch-js/elasticsearch.js",
   "homepage": "http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html",
   "version": "14.0.0-SNAPSHOT",
   "keywords": [
@@ -14,9 +14,9 @@
     "REST"
   ],
   "browser": {
-    "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
-    "./src/lib/loggers/index.js": "./src/lib/loggers/browser_index.js",
-    "./src/lib/apis/index.js": "./src/lib/apis/browser_index.js",
+    "./src/elasticsearch-js/lib/connectors/index.js": "./src/elasticsearch-js/lib/connectors/browser_index.js",
+    "./src/elasticsearch-js/lib/loggers/index.js": "./src/elasticsearch-js/lib/loggers/browser_index.js",
+    "./src/elasticsearch-js/lib/apis/index.js": "./src/elasticsearch-js/lib/apis/browser_index.js",
     "./test/mocks/server.js": "./test/mocks/browser_server.js"
   },
   "config": {

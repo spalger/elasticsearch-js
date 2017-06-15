@@ -1,6 +1,5 @@
 /src/bower_es_js
-/src/lib/apis
+/src/elasticsearch-js/lib/apis
 /node_modules
-/bower_components
 /dist
 /html_docs

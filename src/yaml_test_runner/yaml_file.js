@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* eslint-disable no-console */
 /**
  * Class representing a YAML file
  * @type {[type]}
@@ -8,7 +6,7 @@ module.exports = YamlFile;
 
 const YamlDoc = require('./yaml_doc');
 const clientManager = require('./client_manager');
-const _ = require('../../../src/elasticsearch-js/lib/utils');
+const _ = require('../elasticsearch-js/lib/utils');
 const async = require('async');
 
 function YamlFile(filename, docs) {

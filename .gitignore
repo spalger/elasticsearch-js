@@ -3,7 +3,6 @@ dist
 npm-debug.log
 node_modules
 scripts/scratch*
-test/integration/yaml_suite/log
 .aws-config.json
 .idea
 esvm
@@ -12,7 +11,6 @@ esvm
 ## generated files
 src/bower*/
 junit-*.xml
-sauce_connect.lo*
 coverage.html
 .snapshots
 html_docs

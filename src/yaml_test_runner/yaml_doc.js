@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 /**
  * Class to wrap a single document from a yaml test file
  *

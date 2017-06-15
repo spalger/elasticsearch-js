@@ -12,7 +12,7 @@ module.exports = function (branch, ES_BRANCHES_DIR, YAML_TESTS_DIR, done) {
   const _ = require('../../src/elasticsearch-js/lib/utils');
   const tests = {}; // populated in readYamlTests
 
-  const RUN_SCRIPT_PATH = fromRoot('test/integration/yaml_suite/run');
+  const RUN_SCRIPT_PATH = fromRoot('src/yaml_test_runner/run');
   const esDir = path.join(ES_BRANCHES_DIR, _.snakeCase(branch));
 
   // generate the yaml tests

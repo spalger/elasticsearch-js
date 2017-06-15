@@ -1,6 +1,6 @@
 module.exports = function (branch) {
   const YamlFile = require('./yaml_file');
-  const _ = require('../../../src/elasticsearch-js/lib/utils');
+  const _ = require('../elasticsearch-js/lib/utils');
   const clientManager = require('./client_manager');
 
   const port = parseInt(process.env.ES_PORT || 9200, 10);

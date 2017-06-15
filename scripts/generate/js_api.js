@@ -57,7 +57,7 @@ module.exports = function (branch, done) {
         return filename[0] !== '_';
       })
       .map(function (filename) {
-        const module = require(apiDir + filename);
+        const module = require(apiDir + filename); // eslint-disable-line import/no-dynamic-require
         delete require.cache[apiDir + filename];
         return module;
       });

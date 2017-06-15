@@ -1,9 +1,6 @@
 module.exports = function (branch) {
-  const path = require('path');
   const YamlFile = require('./yaml_file');
-  const root = require('find-root')(__dirname);
-  const rootReq = function (loc) { return require(path.join(root, loc)); };
-  const _ = rootReq('src/elasticsearch-js/lib/utils');
+  const _ = require('../../../src/elasticsearch-js/lib/utils');
   const clientManager = require('./client_manager');
 
   const port = parseInt(process.env.ES_PORT || 9200, 10);
@@ -29,7 +26,9 @@ module.exports = function (branch) {
       return clientManager.get().clearEs();
     });
 
-    _.each(require('./yaml_tests_' + _.snakeCase(branch) + '.json'), function (docs, filename) {
+    // eslint-disable-next-line import/no-dynamic-require
+    const testFile = require('./yaml_tests_' + _.snakeCase(branch) + '.json');
+    _.each(testFile, function (docs, filename) {
       new YamlFile(filename, docs);
     });
 

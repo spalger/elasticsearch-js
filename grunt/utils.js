@@ -1,7 +1,6 @@
 const _ = require('../src/elasticsearch-js/lib/utils');
 
-const root = require('find-root')(__dirname);
-const pkg = require(root + '/package.json');
+const pkg = require('../package.json');
 const stable = pkg.config.supported_es_branches;
 const unstable = pkg.config.unstable_es_branches;
 const branches = [].concat(stable, unstable);

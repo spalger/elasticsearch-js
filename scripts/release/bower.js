@@ -2,23 +2,21 @@ const fs = require('fs');
 const spawn = require('../_spawn');
 const async = require('async');
 const _ = require('lodash');
+const resolve = require('path').resolve;
 
-const root = require('path').join(__dirname, '../..');
-const bowerDir = root + '/src/bower_es_js';
-
-// get both the bower and node package files
-const bowerJson = require(bowerDir + '/bower.json');
-const bowerPackageJson = require(bowerDir + '/package.json');
-const esjsJson = require(root + '/package.json');
+const bowerDir = resolve(__dirname, '../../src/bower_es_js');
+const bowerJson = require('../../src/bower_es_js/bower.json'); // eslint-disable-line import/no-unresolved
+const bowerPackageJson = require('../../src/bower_es_js/package.json'); // eslint-disable-line import/no-unresolved
+const esjsJson = require('../../package.json');
 
 // update the version to match the node version
 bowerJson.version = esjsJson.version;
 bowerPackageJson.version = esjsJson.version;
 
 // write the new bower.json file
-fs.writeFileSync(bowerDir + '/bower.json', JSON.stringify(bowerJson, null, '  '));
+fs.writeFileSync(resolve(bowerDir, 'bower.json'), JSON.stringify(bowerJson, null, '  '));
 // write the new package.json file
-fs.writeFileSync(bowerDir + '/package.json', JSON.stringify(bowerPackageJson, null, '  '));
+fs.writeFileSync(resolve(bowerDir, 'package.json'), JSON.stringify(bowerPackageJson, null, '  '));
 
 function make(cmd, args) {
   return _.bind(spawn, null, cmd, args, {

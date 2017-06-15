@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
   const Promise = require('bluebird');
   const utils = require('./utils');
+  const resolve = require('path').resolve;
   const readFile = Promise.promisify(require('fs').readFile);
   const writeFile = Promise.promisify(require('fs').writeFile);
 
@@ -38,13 +39,12 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('version', function (nextVersion) {
-    const root = require('path').join.bind(null, __dirname, '..');
-    const readmePath = root('README.md');
-    const packagePath = root('package.json');
-    const browserBuildsPath = root('docs/browser_builds.asciidoc');
+    const readmePath = resolve(__dirname, '../README.md');
+    const packagePath = require.resolve('../package.json');
+    const browserBuildsPath = resolve(__dirname, '../docs/browser_builds.asciidoc');
 
     Promise.all([
-      require(packagePath),
+      require('../package.json'),
       readFile(readmePath, 'utf8'),
       readFile(browserBuildsPath, 'utf8')
     ])

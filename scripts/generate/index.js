@@ -27,9 +27,8 @@ let argv = require('optimist')
   });
 
 const path = require('path');
-const fromRoot = path.join.bind(path, require('find-root')(__dirname));
-const utils = require(fromRoot('grunt/utils'));
-const _ = require(fromRoot('src/elasticsearch-js/lib/utils'));
+const utils = require('../../grunt/utils');
+const _ = require('../../src/elasticsearch-js/lib/utils');
 const esUrl = process.env.ES_REPO
   ? path.resolve(process.cwd(), process.env.ES_REPO)
   : 'https://github.com/elastic/elasticsearch.git';
@@ -50,6 +49,7 @@ if (argv.branch) {
   branches = utils.branches;
 }
 
+const fromRoot = (...args) => path.resolve(__dirname, '../..', ...args);
 const TMP_DIR = fromRoot('tmp');
 const ES_REPO_DIR = path.join(TMP_DIR, 'es/repo');
 const ES_BRANCHES_DIR = path.join(TMP_DIR, 'es/branches');

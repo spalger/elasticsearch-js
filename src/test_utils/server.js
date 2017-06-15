@@ -6,7 +6,7 @@ const _ = require('lodash');
 const async = require('async');
 const root = require('path').join(__dirname, '../..');
 const browserify = require('browserify');
-const pkg = require(root + '/package.json');
+const pkg = require('../../package.json');
 const unitSpecDir = root + '/test/unit/specs';
 const browserBuildsDir = root + '/test/unit/browser_builds';
 

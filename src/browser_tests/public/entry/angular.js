@@ -1,48 +1,35 @@
-/* global angular */
 const _ = require('lodash');
 const expect = require('expect.js');
 const Promise = require('bluebird');
 
-describe('Angular esFactory', function () {
-  before(function () {
-    require('../../../src/elasticsearch-js/elasticsearch.angular.js');
-  });
+/* global angular */
+require('script-loader!angular/angular.js');
+require('script-loader!angular-mocks');
+require('script-loader!../../../../dist/elasticsearch.angular.js');
 
+describe('Angular esFactory', function () {
   let esFactory;
   let $rootScope;
 
-  function bootstrap(env) {
-    beforeEach(function () {
-      let promiseProvider = _.noop;
-      if (env.bluebirdPromises) {
-        promiseProvider = function ($provide) {
-          $provide.service('$q', function () {
-            return {
-              defer: function () {
-                return _.bindAll(Promise.defer(), ['resolve', 'reject']);
-              },
-              reject: Promise.reject,
-              when: Promise.resolve,
-              all: Promise.all
-            };
-          });
-        };
-      }
-
-      angular.mock.module(promiseProvider, 'elasticsearch');
+  beforeEach(angular.mock.module('elasticsearch', function ($provide) {
+    $provide.service('$q', function () {
+      return {
+        defer: function () {
+          return _.bindAll(Promise.defer(), ['resolve', 'reject']);
+        },
+        reject: Promise.reject,
+        when: Promise.resolve,
+        all: Promise.all
+      };
     });
+  }));
 
-    beforeEach(angular.mock.inject(function ($injector) {
-      esFactory = $injector.get('esFactory');
-      $rootScope = $injector.get('$rootScope');
-    }));
-  }
+  beforeEach(angular.mock.inject(function ($injector) {
+    esFactory = $injector.get('esFactory');
+    $rootScope = $injector.get('$rootScope');
+  }));
 
   describe('basic', function () {
-    bootstrap({
-      bluebirdPromises: true
-    });
-
     it('is available in the elasticsearch module', function () {
       expect(esFactory).to.be.a('function');
     });

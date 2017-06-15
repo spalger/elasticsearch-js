@@ -1,5 +1,8 @@
-/* global $ */
 const expect = require('expect.js');
+
+/* global $ */
+require('script-loader!jquery');
+require('script-loader!../../../../dist/elasticsearch.jquery.js');
 
 describe('jQuery.es namespace', function () {
   it('is defined on the global jQuery', function () {

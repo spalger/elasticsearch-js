@@ -1,0 +1,1 @@
+require.context('../../../elasticsearch-js', true, /(\/|\\)__tests__(\/|\\)(common|browser)(\/|\\).+\.js/);

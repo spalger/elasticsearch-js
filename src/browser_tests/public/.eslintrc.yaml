@@ -1,0 +1,13 @@
+---
+env:
+  mocha: true
+  browser: true
+  node: false
+
+globals:
+  - mocha
+  
+settings:
+  import/resolver:
+    webpack: 
+      config: ./src/webpack_config/browser_tests.js

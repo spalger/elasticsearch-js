@@ -1,5 +1,7 @@
 const expect = require('expect.js');
 
+require('script-loader!../../../../dist/elasticsearch.js');
+
 describe('elasticsearch namespace', function () {
   const es = window.elasticsearch;
   it('is defined on the window', function () {

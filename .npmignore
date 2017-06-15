@@ -1,5 +1,6 @@
 *
 !src/elasticsearch-js/**/*
+src/elasticsearch-js/**/__tests__/**/*
 !package.json
 !LICENSE
 !README.md

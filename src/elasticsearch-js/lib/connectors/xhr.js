@@ -5,8 +5,6 @@
  */
 module.exports = XhrConnector;
 
-/* jshint browser:true */
-
 const _ = require('../utils');
 const ConnectionAbstract = require('../connection');
 const ConnectionFault = require('../errors').ConnectionFault;
@@ -32,7 +30,6 @@ if (typeof XMLHttpRequest !== 'undefined') {
   // find the first MS implementation available
   getXhr = _(['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'])
   .map(function (appName) {
-    /* jshint unused: false */
     try {
       const test = new window.ActiveXObject(appName); // eslint-disable-line no-unused-vars
       return function () {

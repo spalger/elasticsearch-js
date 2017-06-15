@@ -42,12 +42,10 @@ Tracer.prototype._formatTraceMessage = function (req) {
   reqUrl.hostname = this.curlHost;
   reqUrl.query = _.defaults(reqUrl.query || {}, { pretty: true });
 
-  /* jshint quotmark: double */
   const curlCall =
     '# ' + originalHost + '\n' +
     'curl \'' + url.format(reqUrl).replace(/'/g, '\\\'') + '\' -X' + req.method.toUpperCase() +
     (req.body ? ' -d \'' + this._prettyJson(req.body) + '\'' : '');
-  /* jshint quotmark: single */
 
   return {
     curl: curlCall,

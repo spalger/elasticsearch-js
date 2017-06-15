@@ -1,4 +1,3 @@
-/* jshint curly: false */
 const async = require('async');
 const fs = require('fs');
 const spawn = require('../_spawn');

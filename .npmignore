@@ -1,29 +1,5 @@
-.DS_Store
-dist
-npm-debug.log
-node_modules
-scripts/scratch*
-test/integration/yaml_suite/log
-.aws-config.json
-.idea
-esvm
-/tmp
-
-## generated files
-src/bower*/
-junit-*.xml
-sauce_connect.lo*
-coverage.html
-.snapshots
-html_docs
-
-## just in .npmignore
-.eslintrc
-.travis.yml
-CHANGELOG.md
-CONTRIBUTING.md
-docs/
-grunt/
-Gruntfile.js
-scripts/
-test/
+*
+!src/**/*
+!package.json
+!LICENSE
+!README.md

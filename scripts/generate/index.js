@@ -58,10 +58,9 @@ const YAML_TESTS_DIR = path.join(TMP_DIR, 'yaml_tests');
 
 const paths = {
   root: fromRoot('.'),
-  src: fromRoot('src'),
   docs: fromRoot('docs'),
   docsIndex: fromRoot('docs/index.asciidoc'),
-  apiSrc: 'src/lib/apis',
+  apiSrc: 'src/elasticsearch-js/lib/apis',
   getArchiveDir: function (branch) {
     return path.join(ES_BRANCHES_DIR, _.snakeCase(branch));
   },

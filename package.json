@@ -20,9 +20,6 @@
     "./test/mocks/server.js": "./test/mocks/browser_server.js"
   },
   "config": {
-    "blanket": {
-      "pattern": "specified in test/unit/coverage.js"
-    },
     "default_api_branch": "5.4",
     "supported_es_branches": [
       "5.4",

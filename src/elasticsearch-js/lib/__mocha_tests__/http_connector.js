@@ -8,18 +8,18 @@ describe('Http Connector', function () {
   const https = require('https');
   const AgentKeepAlive = require('agentkeepalive');
 
-  const Host = require('../../../src/elasticsearch-js/lib/host');
-  const HttpConnection = require('../../../src/elasticsearch-js/lib/connectors/http');
-  const ConnectionAbstract = require('../../../src/elasticsearch-js/lib/connection');
+  const Host = require('../host');
+  const HttpConnection = require('../connectors/http');
+  const ConnectionAbstract = require('../connection');
 
-  const expectSubObject = require('../../utils/expect_sub_object');
-  const MockRequest = require('../../mocks/request');
-  const MockIncommingMessage = require('../../mocks/incomming_message');
+  const expectSubObject = require('../../../test_utils/expect_sub_object');
+  const MockRequest = require('../../../test_mocks/request');
+  const MockIncommingMessage = require('../../../test_mocks/incomming_message');
   const zlib = require('zlib');
 
   nock.disableNetConnect();
 
-  const stub = require('../../utils/auto_release_stub').make();
+  const stub = require('../../../test_utils/auto_release_stub').make();
 
   function makeStubReqMethod(prep) {
     return function (params, cb) {
@@ -475,7 +475,7 @@ describe('Http Connector', function () {
       this.timeout(5 * 60 * 1000);
       const cp = require('child_process');
       const path = require('path');
-      const fixture = _.partial(path.join, __dirname, '../../fixtures');
+      const fixture = _.partial(path.join, __dirname, '../../../test_fixtures');
       let timeout; // start the timeout once we hear back from the client
 
       let client; // eslint-disable-line prefer-const

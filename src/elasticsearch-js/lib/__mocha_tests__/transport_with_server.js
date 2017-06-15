@@ -1,13 +1,13 @@
-const Transport = require('../../../src/elasticsearch-js/lib/transport');
-const ConnectionPool = require('../../../src/elasticsearch-js/lib/connection_pool');
-const errors = require('../../../src/elasticsearch-js/lib/errors');
+const Transport = require('../transport');
+const ConnectionPool = require('../connection_pool');
+const errors = require('../errors');
 const expect = require('expect.js');
 
 const sinon = require('sinon');
-const nock = require('../../mocks/server.js');
+const nock = require('../../../test_mocks/server.js');
 const through2 = require('through2');
 const _ = require('lodash');
-const stub = require('../../utils/auto_release_stub').make();
+const stub = require('../../../test_utils/auto_release_stub').make();
 
 describe('Transport + Mock server', function () {
   describe('#request', function () {

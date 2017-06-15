@@ -1,5 +1,5 @@
 describe('Yaml Test Reader', function () {
-  const YamlDoc = require('../../integration/yaml_suite/yaml_doc');
+  const YamlDoc = require('../yaml_doc');
   const compare = YamlDoc.compareRangeToVersion;
   const expect = require('expect.js');
 

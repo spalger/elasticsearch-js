@@ -1,4 +1,4 @@
-const slk = require('../../test/utils/slk');
+const slk = require('../../src/test_utils/slk');
 module.exports = {
   all: {
     options: {

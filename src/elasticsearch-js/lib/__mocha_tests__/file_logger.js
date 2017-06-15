@@ -1,13 +1,13 @@
 describe('File Logger', function () {
-  const Log = require('../../../src/elasticsearch-js/lib/log');
-  const FileLogger = require('../../../src/elasticsearch-js/lib/loggers/file');
+  const Log = require('../log');
+  const FileLogger = require('../loggers/file');
   const once = require('events').EventEmitter.prototype.once;
-  const _ = require('../../../src/elasticsearch-js/lib/utils');
+  const _ = require('../utils');
   let parentLog;
   let logger;
   const expect = require('expect.js');
   const fs = require('fs');
-  const stub = require('../../utils/auto_release_stub').make();
+  const stub = require('../../../test_utils/auto_release_stub').make();
 
   beforeEach(function () {
     parentLog = new Log();
@@ -31,7 +31,7 @@ describe('File Logger', function () {
     fs.unlinkSync('test.log');
   });
 
-  require('../generic_logger_tests')(makeLogger);
+  require('./lib').genericLoggerTests(makeLogger);
 
   describe('buffer flush', function () {
     if (require('stream').Writable) {

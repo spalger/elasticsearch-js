@@ -1,7 +1,7 @@
-const _ = require('../../../src/elasticsearch-js/lib/utils');
+const _ = require('../utils');
 const expect = require('expect.js');
 
-const stub = require('../../utils/auto_release_stub').make();
+const stub = require('../../../test_utils/auto_release_stub').make();
 
 describe('Utils', function () {
 
@@ -397,7 +397,7 @@ describe('Utils', function () {
     });
 
     if (require('stream').Writable) {
-      const MockWritableStream = require('../../mocks/writable_stream');
+      const MockWritableStream = require('../../../test_mocks/writable_stream');
       it('ignores empty stream', function () {
         const stream = new MockWritableStream();
         expect(_.getUnwrittenFromStream(stream)).to.be('');

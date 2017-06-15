@@ -1,14 +1,14 @@
 describe('Stream Logger', function () {
-  const Log = require('../../../src/elasticsearch-js/lib/log');
-  const StreamLogger = require('../../../src/elasticsearch-js/lib/loggers/stream');
-  const MockWritableStream = require('../../mocks/writable_stream');
+  const Log = require('../log');
+  const StreamLogger = require('../loggers/stream');
+  const MockWritableStream = require('../../../test_mocks/writable_stream');
   const once = require('events').EventEmitter.prototype.once;
   const stream = new MockWritableStream();
-  const _ = require('../../../src/elasticsearch-js/lib/utils');
+  const _ = require('../utils');
   const expect = require('expect.js');
   let parentLog;
 
-  const stub = require('../../utils/auto_release_stub').make();
+  const stub = require('../../../test_utils/auto_release_stub').make();
 
   beforeEach(function () {
     stub(stream, 'write');
@@ -31,7 +31,7 @@ describe('Stream Logger', function () {
     return new StreamLogger(parent, config);
   }
 
-  require('../generic_logger_tests')(makeLogger);
+  require('./lib').genericLoggerTests(makeLogger);
 
   describe('buffer flush', function () {
     if (require('stream').Writable) {

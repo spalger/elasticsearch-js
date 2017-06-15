@@ -1,7 +1,7 @@
 describe('Tracer Logger', function () {
 
-  const Log = require('../../../src/elasticsearch-js/lib/log');
-  const TracerLogger = require('../../../src/elasticsearch-js/lib/loggers/tracer');
+  const Log = require('../log');
+  const TracerLogger = require('../loggers/tracer');
   const expect = require('expect.js');
   let parentLog;
 
@@ -21,9 +21,9 @@ describe('Tracer Logger', function () {
     return new TracerLogger(parent, config);
   }
 
-  const stub = require('../../utils/auto_release_stub').make();
+  const stub = require('../../../test_utils/auto_release_stub').make();
 
-  // require('../generic_logger_tests')(makeLogger);
+  // require('./lib').genericLoggerTests(makeLogger);
 
   describe('#formatTraceMessage', function () {
     it('includes the original host', function () {

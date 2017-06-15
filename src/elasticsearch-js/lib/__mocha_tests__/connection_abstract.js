@@ -1,11 +1,11 @@
-const ConnectionAbstract = require('../../../src/elasticsearch-js/lib/connection');
-const Host = require('../../../src/elasticsearch-js/lib/host');
+const ConnectionAbstract = require('../connection');
+const Host = require('../host');
 const sinon = require('sinon');
 const expect = require('expect.js');
 const _ = require('lodash');
-const errors = require('../../../src/elasticsearch-js/lib/errors');
+const errors = require('../errors');
 
-const stub = require('../../utils/auto_release_stub').make();
+const stub = require('../../../test_utils/auto_release_stub').make();
 
 describe('Connection Abstract', function () {
   const host = new Host('localhost:9200');

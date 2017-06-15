@@ -1,5 +1,5 @@
-const Log = require('../../../src/elasticsearch-js/lib/log');
-const ConsoleLogger = require('../../../src/elasticsearch-js/lib/loggers/console');
+const Log = require('../log');
+const ConsoleLogger = require('../loggers/console');
 const sinon = require('sinon');
 const expect = require('expect.js');
 let parentLog;
@@ -20,11 +20,11 @@ function makeLogger(parent, levels) {
   return new ConsoleLogger(parent, config);
 }
 
-require('../../utils/auto_release_stub').make();
+require('../../../test_utils/auto_release_stub').make();
 
 describe('Console Logger', function () {
 
-  require('../generic_logger_tests')(makeLogger);
+  require('./lib').genericLoggerTests(makeLogger);
 
   it('checks before using unique logging functions, falls back to #log()', function () {
     const _warning = console.warn;

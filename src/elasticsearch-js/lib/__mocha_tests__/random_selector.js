@@ -1,5 +1,5 @@
 describe('Random Selector', function () {
-  const randomSelector = require('../../../src/elasticsearch-js/lib/selectors/random');
+  const randomSelector = require('../selectors/random');
   const _ = require('lodash');
   const expect = require('expect.js');
 

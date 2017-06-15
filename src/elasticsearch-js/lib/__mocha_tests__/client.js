@@ -2,10 +2,10 @@ describe('Client instances creation', function () {
   const stream = require('stream');
   const util = require('util');
 
-  const es = require('../../../src/elasticsearch-js/elasticsearch');
-  const apis = require('../../../src/elasticsearch-js/lib/apis');
+  const es = require('../../elasticsearch');
+  const apis = require('../apis');
   const expect = require('expect.js');
-  const stub = require('../../utils/auto_release_stub').make();
+  const stub = require('../../../test_utils/auto_release_stub').make();
   let client;
 
   describe('', function () {
@@ -25,7 +25,7 @@ describe('Client instances creation', function () {
       }).to.throwError(/previous "elasticsearch" module/);
     });
 
-    const pkg = require('../../../package.json');
+    const pkg = require('../../../../package.json');
     const def = pkg.config.default_api_branch;
     const prev = pkg.config.supported_es_branches[pkg.config.supported_es_branches.indexOf(def) + 1];
 

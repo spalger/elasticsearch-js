@@ -1,0 +1,1 @@
+exports.genericLoggerTests = require('./generic_logger_tests');

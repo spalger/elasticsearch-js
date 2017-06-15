@@ -1,10 +1,10 @@
 const expect = require('expect.js');
-const Log = require('../../src/elasticsearch-js/lib/log');
+const Log = require('../../log');
 const now = new Date('2013-03-01T00:00:00Z');
 const sinon = require('sinon');
 
 module.exports = function (makeLogger) {
-  const stub = require('../utils/auto_release_stub').make();
+  const stub = require('../../../../test_utils/auto_release_stub').make();
   const parent = new Log();
 
   afterEach(function () {

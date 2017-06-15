@@ -25,7 +25,7 @@ const log = (function () {
 }());
 
 const integration = _.find(process.argv, function (arg) { return arg.indexOf('test/integration') > -1; });
-const unit = _.find(process.argv, function (arg) { return arg.indexOf('test/unit') > -1; });
+const unit = !integration;
 let output;
 
 if (unit) {

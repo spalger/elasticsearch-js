@@ -1,6 +1,6 @@
 const _ = require('../../src/elasticsearch-js/lib/utils');
 const grunt = require('grunt');
-const JENKINS_REPORTER = require.resolve('../../test/utils/jenkins-reporter.js');
+const JENKINS_REPORTER = require.resolve('../../src/test_utils/jenkins-reporter.js');
 
 const config = {
   unit: {

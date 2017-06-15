@@ -1,12 +1,12 @@
-const Transport = require('../transport');
-const Host = require('../host');
-const errors = require('../errors');
+const Transport = require('../../transport');
+const Host = require('../../host');
+const errors = require('../../errors');
 
 const sinon = require('sinon');
 const expect = require('expect.js');
 const _ = require('lodash');
-const nodeList = require('../../../test_fixtures/short_node_list.5.0.json');
-const stub = require('../../../test_utils/auto_release_stub').make();
+const nodeList = require('../../../../test_fixtures/short_node_list.5.0.json');
+const stub = require('../../../../test_utils/auto_release_stub').make();
 
 /**
  * Allows the tests call #request() without it doing anything past trying to select
@@ -285,7 +285,7 @@ describe('Transport Class', function () {
 
     describe('randomizeHosts options', function () {
       it('calls _.shuffle be default', function () {
-        const _ = require('../utils');
+        const _ = require('../../utils');
         stub(Transport.connectionPools.main.prototype, 'setHosts');
         stub(_, 'shuffle');
         new Transport({
@@ -295,7 +295,7 @@ describe('Transport Class', function () {
         expect(_.shuffle.callCount).to.eql(1);
       });
       it('skips the call to _.shuffle when false', function () {
-        const _ = require('../utils');
+        const _ = require('../../utils');
         stub(Transport.connectionPools.main.prototype, 'setHosts');
         stub(_, 'shuffle');
         new Transport({
@@ -595,7 +595,7 @@ describe('Transport Class', function () {
       // create a test that checks N retries
       function testRetries(retries) {
         return function (done) {
-          const randomSelector = require('../selectors/random');
+          const randomSelector = require('../../selectors/random');
           let connections;
           let attempts = 0;
           function failRequest(params, cb) {

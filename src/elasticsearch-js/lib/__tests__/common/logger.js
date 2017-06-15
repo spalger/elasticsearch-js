@@ -1,7 +1,7 @@
 describe('Logger Abstract', function () {
   const expect = require('expect.js');
-  const Log = require('../log');
-  const LoggerAbstract = require('../logger');
+  const Log = require('../../log');
+  const LoggerAbstract = require('../../logger');
 
   let parentLog;
 
@@ -28,6 +28,6 @@ describe('Logger Abstract', function () {
     });
   });
 
-  require('./lib').genericLoggerTests(makeLogger);
+  require('../lib').genericLoggerTests(makeLogger);
 
 });

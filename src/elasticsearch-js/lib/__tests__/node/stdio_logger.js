@@ -1,7 +1,7 @@
 describe('Stdio Logger', function () {
 
-  const Log = require('../log');
-  const StdioLogger = require('../loggers/stdio');
+  const Log = require('../../log');
+  const StdioLogger = require('../../loggers/stdio');
   const expect = require('expect.js');
   const sinon = require('sinon');
   let parentLog;
@@ -22,9 +22,9 @@ describe('Stdio Logger', function () {
     return new StdioLogger(parent, config);
   }
 
-  const stub = require('../../../test_utils/auto_release_stub').make();
+  const stub = require('../../../../test_utils/auto_release_stub').make();
 
-  require('./lib').genericLoggerTests(makeLogger);
+  require('../lib').genericLoggerTests(makeLogger);
 
   describe('colorizing', function () {
     const chalk = require('chalk');

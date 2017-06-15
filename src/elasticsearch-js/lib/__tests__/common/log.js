@@ -1,4 +1,4 @@
-const Log = require('../log');
+const Log = require('../../log');
 const _ = require('lodash');
 const expect = require('expect.js');
 

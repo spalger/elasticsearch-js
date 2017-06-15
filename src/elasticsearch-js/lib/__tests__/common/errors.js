@@ -1,4 +1,4 @@
-const errors = require('../errors');
+const errors = require('../../errors');
 const expect = require('expect.js');
 const _ = require('lodash');
 

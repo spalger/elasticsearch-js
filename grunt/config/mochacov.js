@@ -4,21 +4,21 @@ const JENKINS_REPORTER = require.resolve('../../src/test_utils/jenkins-reporter.
 
 const config = {
   unit: {
-    src: '**/__mocha_tests__/**/*.js',
+    src: '**/__tests__/{common,node}/**/*.js',
     options: {
       reporter: 'nyan'
     }
   },
 
   ci_unit: {
-    src: '**/__mocha_tests__/**/*.js',
+    src: '**/__tests__/{common,node}/**/*.js',
     options: {
       reporter: 'spec'
     }
   },
 
   jenkins_unit: {
-    src: '**/__mocha_tests__/**/*.js',
+    src: '**/__tests__/{common,node}/**/*.js',
     options: {
       reporter: JENKINS_REPORTER
     }
@@ -26,7 +26,7 @@ const config = {
 
   // run the unit tests, and update coverage.html
   make_coverage_html: {
-    src: '**/__mocha_tests__/**/*.js',
+    src: '**/__tests__/{common,node}/**/*.js',
     options: {
       reporter: 'html-cov',
       instrument: false,
@@ -38,7 +38,7 @@ const config = {
 
   // for use by travis
   ship_coverage: {
-    src: '**/__mocha_tests__/**/*.js',
+    src: '**/__tests__/{common,node}/**/*.js',
     options: {
       reporter: 'mocha-lcov-reporter',
       coveralls: true,

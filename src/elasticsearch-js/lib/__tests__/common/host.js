@@ -1,7 +1,7 @@
-const Host = require('../host');
+const Host = require('../../host');
 const expect = require('expect.js');
 const url = require('url');
-const expectSubObject = require('../../../test_utils/expect_sub_object');
+const expectSubObject = require('../../../../test_utils/expect_sub_object');
 
 const hostDefaults = {
   protocol: 'http',

@@ -1,11 +1,11 @@
-const ConnectionPool = require('../connection_pool');
-const Host = require('../host');
-const ConnectionAbstract = require('../connection');
+const ConnectionPool = require('../../connection_pool');
+const Host = require('../../host');
+const ConnectionAbstract = require('../../connection');
 const _ = require('lodash');
 const EventEmitter = require('events').EventEmitter;
 const expect = require('expect.js');
 const sinon = require('sinon');
-const stub = require('../../../test_utils/auto_release_stub').make();
+const stub = require('../../../../test_utils/auto_release_stub').make();
 
 function listenerCount(emitter, event) {
   if (EventEmitter.listenerCount) {

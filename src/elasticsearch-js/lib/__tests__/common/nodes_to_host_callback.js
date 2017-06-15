@@ -1,11 +1,11 @@
 describe('Nodes to host callback', function () {
-  const callback = require('../nodes_to_host');
+  const callback = require('../../nodes_to_host');
   const expect = require('expect.js');
 
-  const nodes90 = require('../../../test_fixtures/short_node_list.0.90.json');
-  const nodes10 = require('../../../test_fixtures/short_node_list.1.0.json');
-  const nodes20 = require('../../../test_fixtures/short_node_list.2.0.json');
-  const nodes50 = require('../../../test_fixtures/short_node_list.5.0.json');
+  const nodes90 = require('../../../../test_fixtures/short_node_list.0.90.json');
+  const nodes10 = require('../../../../test_fixtures/short_node_list.1.0.json');
+  const nodes20 = require('../../../../test_fixtures/short_node_list.2.0.json');
+  const nodes50 = require('../../../../test_fixtures/short_node_list.5.0.json');
 
   describe('0.x style', function () {
     it('properly creates host objects', function () {

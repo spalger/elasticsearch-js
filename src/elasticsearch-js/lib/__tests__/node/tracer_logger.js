@@ -1,7 +1,7 @@
 describe('Tracer Logger', function () {
 
-  const Log = require('../log');
-  const TracerLogger = require('../loggers/tracer');
+  const Log = require('../../log');
+  const TracerLogger = require('../../loggers/tracer');
   const expect = require('expect.js');
   let parentLog;
 
@@ -21,7 +21,7 @@ describe('Tracer Logger', function () {
     return new TracerLogger(parent, config);
   }
 
-  const stub = require('../../../test_utils/auto_release_stub').make();
+  const stub = require('../../../../test_utils/auto_release_stub').make();
 
   // require('./lib').genericLoggerTests(makeLogger);
 

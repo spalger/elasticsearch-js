@@ -1,70 +1,71 @@
-describe('File Logger', function () {
-  const Log = require('../log');
-  const FileLogger = require('../loggers/file');
+describe('Stream Logger', function () {
+  const Log = require('../../log');
+  const StreamLogger = require('../../loggers/stream');
+  const MockWritableStream = require('../../../../test_mocks/writable_stream');
   const once = require('events').EventEmitter.prototype.once;
-  const _ = require('../utils');
-  let parentLog;
-  let logger;
+  const stream = new MockWritableStream();
+  const _ = require('../../utils');
   const expect = require('expect.js');
-  const fs = require('fs');
-  const stub = require('../../../test_utils/auto_release_stub').make();
+  let parentLog;
+
+  const stub = require('../../../../test_utils/auto_release_stub').make();
 
   beforeEach(function () {
+    stub(stream, 'write');
+    stub(stream, 'end');
+
     parentLog = new Log();
   });
 
   afterEach(function () {
     parentLog.close();
-    logger && _.clearWriteStreamBuffer(logger.stream);
+    _.clearWriteStreamBuffer(stream);
   });
 
   function makeLogger(parent, levels) {
     parent = parent || parentLog;
-    logger = new FileLogger(parent, {
+    const config = {
       levels: Log.parseLevels(levels || 'trace'),
-      path: 'test.log'
-    });
-    return logger;
+      stream: stream
+    };
+    return new StreamLogger(parent, config);
   }
 
-  after(function () {
-    fs.unlinkSync('test.log');
-  });
-
-  require('./lib').genericLoggerTests(makeLogger);
+  require('../lib').genericLoggerTests(makeLogger);
 
   describe('buffer flush', function () {
     if (require('stream').Writable) {
       it('writes everything in the buffer to console.error', function () {
+        const logger = makeLogger();
         const line = 'This string is written 10 times to create buffered output\n';
 
-        let exitHandler;
-        stub(process, 'once', function (event, handler) {
-          if (event === 'exit') {
-            exitHandler = handler;
-          }
-          once.call(process, event, handler);
-        });
+        // get the last handler for process's "exit" event
+        const exitHandlers = process._events.exit;
+        const exitHandler = _.isArray(exitHandlers) ? _.last(exitHandlers) : exitHandlers;
 
-        const logger = makeLogger();
+        // allow the logger to acctually write to the stream
+        stream.write.restore();
 
         // write the line 10 times
         _.times(10, function () {
           logger.onDebug(line);
         });
 
-        // collect everything that is written to fs.appendFileSync
+        // collect everything that is written to console.error
         let flushedOutput = '';
-        stub(fs, 'appendFileSync', function (path, str) {
+        stub(console, 'error', function (str) {
           flushedOutput += str;
         });
 
         // call the event handler
         exitHandler.call(process);
 
-        // the first line is sent immediately to _write and there is nothing we can do about that
+        // restore console.error asap.
+        console.error.restore();
+
+        // the first line is sent immediately to _write and there is nothing we are not going to worry about it
         expect(flushedOutput).to.match(new RegExp(line));
-        expect(flushedOutput.match(new RegExp(line, 'g')).length).to.be(9);
+        expect(flushedOutput.match(new RegExp(line, 'g'))).to.have.length(9);
       });
     } else {
       it('does not fall apart with non streams2 streams', function () {
@@ -85,4 +86,5 @@ describe('File Logger', function () {
       });
     }
   });
+
 });

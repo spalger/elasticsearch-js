@@ -1,5 +1,5 @@
 
-const rel = require('path').resolve.bind(null, __dirname, '..');
+const rel = require('path').resolve.bind(null, __dirname, '../..');
 
 function ignoreLoader(ignores) {
   return {
@@ -14,7 +14,7 @@ function jsLoader() {
   return {
     loader: 'babel-loader',
     test: /\.js$/,
-    include: rel('src/elasticsearch-js'),
+    include: /src(\/|\\)elasticsearch-js/,
   };
 }
 

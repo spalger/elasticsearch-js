@@ -1,70 +1,56 @@
-
 import { Command } from 'commander';
-import Rx from 'rxjs';
 
 import {
-  observeChrome,
-  observeServer,
-  observePageEvents,
-  observePageTestResults,
-  observePageErrors,
-  observePageConsole,
-  observeCompletion,
+  withChrome,
+  withServer,
+  withChromeRemote,
+  observeTestState,
 } from './lib';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms).unref());
 
 const cmd = new Command('node scripts/browser_tests');
-cmd
-  .description('Run browser tests in an instance of headless chrome');
+cmd.description('Run browser tests in an instance of headless chrome');
 
 const URL = 'http://localhost:8080';
 const URLS = [
-  URL + `/angular.html`,
-  URL + `/browser.html`,
-  URL + `/jquery.html`,
+  URL + '/angular.html',
+  URL + '/browser.html',
+  URL + '/jquery.html',
 ];
 
-const main$ = Rx.Observable
-  .combineLatest(
-    observeChrome().do(() => console.log('started chrome')),
-    observeServer(URL).do(() => console.log('started server at', URL))
-  )
-  .mergeMap(([ chrome, /* server */ ]) => {
-    return Rx.Observable.from(URLS)
-      .mergeMap(url => {
-        const pageEvents$ = observePageEvents(chrome, url).share();
-        const testResultsNoTimeout$ = observePageTestResults(pageEvents$).share();
-        const testResults$ = Rx.Observable.merge(
-          testResultsNoTimeout$,
-          Rx.Observable.of(new Error('Timeout: tests took over 3 minutes to compelte'))
-            .delay(3 * MINUTE)
-            .mergeMap(Rx.Observable.throw)
-            .takeUntil(observeCompletion(testResultsNoTimeout$)),
-        ).share();
+async function main() {
+  await withChrome(async chrome => {
+    await withServer(URL, async () => {
+      for (const url of URLS) {
+        console.log('');
+        console.log('testing', url);
+        await withChromeRemote(chrome, url, async remote => {
+          const results = await Promise.race([
+            observeTestState(remote)
+              .filter(state => state.complete)
+              .first()
+              .toPromise(),
 
-        observePageErrors(pageEvents$)
-          .do(error => console.log('browser error', error.stack))
-          .takeUntil(observeCompletion(testResults$));
+            delay(3 * MINUTE).then(() => {
+              throw new Error('Timeout: tests took over 3 minutes to compelte');
+            }),
+          ]);
 
-        observePageConsole(pageEvents$)
-          .do(event => console.log(`${event.payload.api}():`,...event.payload.args))
-          .takeUntil(observeCompletion(testResults$));
+          console.log('  pass:', results.stats.passes);
+          console.log('  fail:', results.stats.failures);
+          console.log('  pending:', results.stats.pending);
+          console.log('  total:', results.stats.tests);
+          console.log('------------------');
+          console.log('');
+        });
+      }
+    });
+  });
+}
 
-        return testResults$
-          .map(results => {
-            console.log('test results', results);
-          })
-          .ignoreElements()
-          .concat(Rx.Observable.of(url));
-      }, null, 1);
-  })
-  .do(url => console.log('done with', url))
-  .take(URLS.length);
-
-main$.subscribe({
-  error: error => {
-    console.error('FATAL ERROR', error.stack);
-  }
+main().catch(error => {
+  console.log('FATAL ERROR', error.stack);
 });

@@ -1,27 +1,26 @@
 import { createServer } from 'http';
 import { parse as parseUrl } from 'url';
 
-import Rx from 'rxjs/Rx';
+import { fromNode as fcb } from 'bluebird';
 import createExpress from 'express';
 
-import { observeWebpackMiddleware } from './webpack_middleware';
+import { withWebpackMiddleware } from './webpack_middleware';
 
-export function observeServer(url) {
-  return observeWebpackMiddleware()
-    .mergeMap(webpackMiddleware => new Rx.Observable(observer => {
+export async function withServer(url, block) {
+  await withWebpackMiddleware(async (webpackMiddleware) => {
+    let server;
+    try {
       const { port } = parseUrl(url);
       const express = createExpress();
-      const server = createServer(express);
+      server = createServer(express);
 
       express.use(webpackMiddleware);
-      server.listen(port, error => {
-        if (error) {
-          observer.error(error);
-        } else {
-          observer.next(server);
-        }
+      await fcb(cb => server.listen(port, cb));
+      console.log('started server at', url);
 
-        observer.add(() => server.close());
-      });
-    }));
+      await block(server);
+    } finally {
+      if (server) await server.close();
+    }
+  });
 }

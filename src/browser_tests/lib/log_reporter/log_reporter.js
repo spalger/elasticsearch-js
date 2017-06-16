@@ -1,5 +1,6 @@
 import { createLogFailureObserver } from './log_failure_observer';
 import { ProgressLogger } from './progress_logger';
+import { logSummary } from './log_summary';
 
 export function createLogReporter(testState$) {
   const progress = new ProgressLogger();
@@ -87,16 +88,8 @@ export function createLogReporter(testState$) {
   const summary$ = failures$
     .ignoreElements()
     .concat(finalState$)
-    .do({
-      next(state) {
-        console.log('  pass:', state.stats.passes);
-        console.log('  fail:', state.stats.failures);
-        console.log('  pending:', state.stats.pending);
-        console.log('  total:', state.stats.tests);
-        console.log('------------------');
-        console.log('');
-      }
-    });
+    .map(state => state.stats)
+    .do(logSummary);
 
   /**
    *  Simple class exposes a promise that resolves

@@ -5,6 +5,9 @@ describe('Tracer Logger', function () {
   const expect = require('expect.js');
   let parentLog;
 
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
+
   beforeEach(function () {
     parentLog = new Log();
   });
@@ -20,8 +23,6 @@ describe('Tracer Logger', function () {
     };
     return new TracerLogger(parent, config);
   }
-
-  const stub = require('../../../../test_utils/auto_release_stub').make();
 
   // require('./lib').genericLoggerTests(makeLogger);
 
@@ -47,7 +48,7 @@ describe('Tracer Logger', function () {
     let logger;
     beforeEach(function () {
       logger = makeLogger();
-      stub(logger.stream, 'write');
+      sandbox.stub(logger.stream, 'write');
     });
 
     it('detects tracer logs by listening messages wrapped in objects', function () {

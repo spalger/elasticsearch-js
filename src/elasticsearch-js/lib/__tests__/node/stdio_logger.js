@@ -3,8 +3,10 @@ describe('Stdio Logger', function () {
   const Log = require('../../log');
   const StdioLogger = require('../../loggers/stdio');
   const expect = require('expect.js');
-  const sinon = require('sinon');
   let parentLog;
+
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
 
   beforeEach(function () {
     parentLog = new Log();
@@ -22,8 +24,6 @@ describe('Stdio Logger', function () {
     return new StdioLogger(parent, config);
   }
 
-  const stub = require('../../../../test_utils/auto_release_stub').make();
-
   require('../lib').genericLoggerTests(makeLogger);
 
   describe('colorizing', function () {
@@ -33,7 +33,7 @@ describe('Stdio Logger', function () {
     const nowTime = nowDate.getTime();
 
     beforeEach(function () {
-      stub.autoRelease(sinon.useFakeTimers(nowTime));
+      sandbox.useFakeTimers(nowTime);
     });
 
     it('uses colors when it\'s supported', function () {
@@ -44,7 +44,7 @@ describe('Stdio Logger', function () {
 
     it('obeys the logger.color === false', function () {
       const logger = makeLogger();
-      stub(process.stdout, 'write');
+      sandbox.stub(process.stdout, 'write');
       const withoutColor = 'Elasticsearch INFO: ' + now + '\n  something\n\n';
 
       logger.color = false;
@@ -55,7 +55,7 @@ describe('Stdio Logger', function () {
     it('obeys the logger.color === true', function () {
       const logger = makeLogger();
 
-      stub(process.stdout, 'write');
+      sandbox.stub(process.stdout, 'write');
       const withoutColor = 'Elasticsearch DEBUG: ' + now + '\n  be weary\n\n';
 
       logger.color = true;

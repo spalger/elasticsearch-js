@@ -8,7 +8,8 @@ describe('Stream Logger', function () {
   const expect = require('expect.js');
   let parentLog;
 
-  const stub = require('../../../../test_utils/auto_release_stub').make();
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
 
   beforeEach(function () {
     stub(stream, 'write');

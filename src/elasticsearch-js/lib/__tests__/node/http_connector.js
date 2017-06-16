@@ -17,9 +17,10 @@ describe('Http Connector', function () {
   const MockIncommingMessage = require('../../../../test_mocks/incomming_message');
   const zlib = require('zlib');
 
-  nock.disableNetConnect();
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
 
-  const stub = require('../../../../test_utils/auto_release_stub').make();
+  nock.disableNetConnect();
 
   function makeStubReqMethod(prep) {
     return function (params, cb) {
@@ -162,8 +163,8 @@ describe('Http Connector', function () {
 
   describe('#request', function () {
     beforeEach(function () {
-      stub(http, 'request', makeStubReqMethod(whereReqDies()));
-      stub(https, 'request', makeStubReqMethod(whereReqDies()));
+      sandbox.stub(http, 'request').callsFake(makeStubReqMethod(whereReqDies()));
+      sandbox.stub(https, 'request').callsFake(makeStubReqMethod(whereReqDies()));
     });
 
     it('calls http based on the host', function (done) {
@@ -189,14 +190,14 @@ describe('Http Connector', function () {
     it('does not log error events', function (done) {
       const con = new HttpConnection(new Host('http://google.com'));
 
-      stub(con.log, 'error');
-      stub(con.log, 'trace');
-      stub(con.log, 'info');
-      stub(con.log, 'warning');
-      stub(con.log, 'debug');
+      sandbox.stub(con.log, 'error');
+      sandbox.stub(con.log, 'trace');
+      sandbox.stub(con.log, 'info');
+      sandbox.stub(con.log, 'warning');
+      sandbox.stub(con.log, 'debug');
 
       http.request.restore();
-      stub(http, 'request', makeStubReqMethod(whereReqDies(new Error('actual error'))));
+      sandbox.stub(http, 'request').callsFake(makeStubReqMethod(whereReqDies(new Error('actual error'))));
 
       con.request({}, function (err) {
         // error should have been sent to the
@@ -216,7 +217,7 @@ describe('Http Connector', function () {
     it('logs error events', function (done) {
       const con = new HttpConnection(new Host('http://google.com'));
 
-      stub(con.log, 'error');
+      sandbox.stub(con.log, 'error');
 
       http.request.func = makeStubReqMethod(whereReqDies(new Error('actual error')));
 
@@ -248,8 +249,8 @@ describe('Http Connector', function () {
 
     it('does not log errors', function (done) {
       const con = new HttpConnection(new Host('https://google.com'));
-      stub(con.log, 'error');
-      stub(https, 'request', makeStubReqWithMsgWhichErrorsMidBody());
+      sandbox.stub(con.log, 'error');
+      sandbox.stub(https, 'request').callsFake(makeStubReqWithMsgWhichErrorsMidBody());
 
       con.request({}, function () {
         expect(con.log.error.callCount).to.eql(0);
@@ -259,7 +260,7 @@ describe('Http Connector', function () {
 
     it('passes the original error on', function (done) {
       const con = new HttpConnection(new Host('https://google.com'));
-      stub(https, 'request', makeStubReqWithMsgWhichErrorsMidBody(new Error('no more message :(')));
+      sandbox.stub(https, 'request').callsFake(makeStubReqWithMsgWhichErrorsMidBody(new Error('no more message :(')));
 
       con.request({}, function (err) {
         expect(err).to.be.an(Error);
@@ -270,7 +271,7 @@ describe('Http Connector', function () {
 
     it('does not pass the partial body along', function (done) {
       const con = new HttpConnection(new Host('https://google.com'));
-      stub(https, 'request', makeStubReqWithMsgWhichErrorsMidBody());
+      sandbox.stub(https, 'request').callsFake(makeStubReqWithMsgWhichErrorsMidBody());
 
       con.request({}, function (err, resp) {
         expect(resp).to.be(undefined);
@@ -280,7 +281,7 @@ describe('Http Connector', function () {
 
     it('does not pass the status code along', function (done) {
       const con = new HttpConnection(new Host('https://google.com'));
-      stub(https, 'request', makeStubReqWithMsgWhichErrorsMidBody());
+      sandbox.stub(https, 'request').callsFake(makeStubReqWithMsgWhichErrorsMidBody());
 
       con.request({}, function (err, resp, status) {
         expect(status).to.be(undefined);
@@ -408,7 +409,7 @@ describe('Http Connector', function () {
   describe('HTTP specifics', function () {
     it('uses TCP no delay', function (done) {
       const con = new HttpConnection(new Host('localhost'));
-      stub(http.ClientRequest.prototype, 'setNoDelay');
+      sandbox.stub(http.ClientRequest.prototype, 'setNoDelay');
       const server = nock('http://localhost').get('/').reply(200);
 
       con.request({}, function () {
@@ -421,7 +422,7 @@ describe('Http Connector', function () {
 
     it('sets the Content-Length header properly', function (done) {
       const con = new HttpConnection(new Host('localhost'));
-      stub(http.ClientRequest.prototype, 'setHeader');
+      sandbox.stub(http.ClientRequest.prototype, 'setHeader');
       const server = nock('http://localhost').get('/').reply(200);
 
       const body = 'pasta and 𝄞';

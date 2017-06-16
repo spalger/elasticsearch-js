@@ -7,7 +7,9 @@ describe('File Logger', function () {
   let logger;
   const expect = require('expect.js');
   const fs = require('fs');
-  const stub = require('../../../../test_utils/auto_release_stub').make();
+
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
 
   beforeEach(function () {
     parentLog = new Log();
@@ -39,7 +41,7 @@ describe('File Logger', function () {
         const line = 'This string is written 10 times to create buffered output\n';
 
         let exitHandler;
-        stub(process, 'once', function (event, handler) {
+        sandbox.stub(process, 'once').callsFake(function (event, handler) {
           if (event === 'exit') {
             exitHandler = handler;
           }
@@ -55,7 +57,7 @@ describe('File Logger', function () {
 
         // collect everything that is written to fs.appendFileSync
         let flushedOutput = '';
-        stub(fs, 'appendFileSync', function (path, str) {
+        sandbox.stub(fs, 'appendFileSync').callsFake(function (path, str) {
           flushedOutput += str;
         });
 
@@ -69,7 +71,7 @@ describe('File Logger', function () {
     } else {
       it('does not fall apart with non streams2 streams', function () {
         let exitHandler;
-        stub(process, 'once', function (event, handler) {
+        sandbox.stub(process, 'once').callsFake(function (event, handler) {
           if (event === 'exit') {
             exitHandler = handler;
           }

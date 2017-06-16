@@ -1,13 +1,13 @@
 const ConnectionAbstract = require('../../connection');
 const Host = require('../../host');
-const sinon = require('sinon');
 const expect = require('expect.js');
 const _ = require('lodash');
 const errors = require('../../errors');
 
-const stub = require('../../../../test_utils/auto_release_stub').make();
-
 describe('Connection Abstract', function () {
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
+
   const host = new Host('localhost:9200');
 
   it('constructs with defaults for host, and bound', function () {
@@ -35,7 +35,7 @@ describe('Connection Abstract', function () {
   describe('#ping', function () {
     it('accpets just a callback', function () {
       const conn = new ConnectionAbstract(host);
-      stub(conn, 'request');
+      sandbox.stub(conn, 'request');
       const cb = function () {};
       conn.ping(cb);
       expect(conn.request.callCount).to.eql(1);
@@ -45,7 +45,7 @@ describe('Connection Abstract', function () {
 
     it('accpets just params', function () {
       const conn = new ConnectionAbstract(host);
-      stub(conn, 'request');
+      sandbox.stub(conn, 'request');
       conn.ping({});
       expect(conn.request.callCount).to.eql(1);
       expect(conn.request.lastCall.args[0]).to.be.a('object');
@@ -54,7 +54,7 @@ describe('Connection Abstract', function () {
 
     it('allows overriding the requestTimeout, method, and path', function () {
       const conn = new ConnectionAbstract(host);
-      stub(conn, 'request');
+      sandbox.stub(conn, 'request');
       const params = {
         method: 'HEAD',
         path: '/',
@@ -68,10 +68,9 @@ describe('Connection Abstract', function () {
 
     it('defaults to the pingTimeout in the config', function () {
       const conn = new ConnectionAbstract(host, { pingTimeout: 5000 });
-      const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-      stub.autoRelease(clock);
+      const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
 
-      stub(conn, 'request');
+      sandbox.stub(conn, 'request');
 
       expect(_.size(clock.timers)).to.eql(0);
       conn.ping();
@@ -81,18 +80,17 @@ describe('Connection Abstract', function () {
 
     it('calls it\'s own request method', function () {
       const conn = new ConnectionAbstract(host);
-      stub(conn, 'request');
+      sandbox.stub(conn, 'request');
       conn.ping();
       expect(conn.request.callCount).to.eql(1);
     });
 
     it('sets a timer for the request', function (done) {
       const conn = new ConnectionAbstract(host);
-      const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-      stub.autoRelease(clock);
+      const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
       let order = 0;
 
-      stub(conn, 'request', function (params, cb) {
+      sandbox.stub(conn, 'request').callsFake(function (params, cb) {
         setTimeout(function () {
           expect(++order).to.eql(2);
           cb();
@@ -114,11 +112,10 @@ describe('Connection Abstract', function () {
     });
     it('calls the requestAborter if req takes too long', function (done) {
       const conn = new ConnectionAbstract(host);
-      const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-      stub.autoRelease(clock);
+      const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
       let order = 0;
 
-      stub(conn, 'request', function (params, cb) {
+      sandbox.stub(conn, 'request').callsFake(function (params, cb) {
         setTimeout(function () {
           expect(++order).to.eql(3);
           cb();

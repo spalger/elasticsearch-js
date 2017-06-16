@@ -1,9 +1,9 @@
 const _ = require('../../utils');
 const expect = require('expect.js');
 
-const stub = require('../../../../test_utils/auto_release_stub').make();
-
 describe('Utils', function () {
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
 
   describe('Additional Type Checkers', function () {
     _.forEach({
@@ -356,7 +356,7 @@ describe('Utils', function () {
 
       it('uses ' + method + ' with ' + i + ' args', function () {
         const func = function () {};
-        stub(func, method);
+        sandbox.stub(func, method);
 
         const args = _.map(new Array(i), function (val, i) { return i; });
         _.applyArgs(func, null, args);
@@ -372,7 +372,7 @@ describe('Utils', function () {
       it('slices the arguments properly before calling ' + method + ' with ' + argCount + ' args sliced at ' + slice,
       function () {
         const func = function () {};
-        stub(func, method);
+        sandbox.stub(func, method);
 
         const args = _.map(new Array(argCount), function (val, i) { return i; });
         const expected = args.slice(slice);

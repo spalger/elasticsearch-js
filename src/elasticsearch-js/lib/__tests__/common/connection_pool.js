@@ -4,8 +4,6 @@ const ConnectionAbstract = require('../../connection');
 const _ = require('lodash');
 const EventEmitter = require('events').EventEmitter;
 const expect = require('expect.js');
-const sinon = require('sinon');
-const stub = require('../../../../test_utils/auto_release_stub').make();
 
 function listenerCount(emitter, event) {
   if (EventEmitter.listenerCount) {
@@ -18,6 +16,9 @@ function listenerCount(emitter, event) {
 }
 
 describe('Connection Pool', function () {
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
+
   describe('Adding/Removing/Syncing Connections', function () {
     let pool;
     let host;
@@ -169,8 +170,7 @@ describe('Connection Pool', function () {
   describe('Connection selection with no living nodes', function () {
     it('should ping all of the dead nodes, in order of oldest timeout, and return the first that\'s okay',
     function (done) {
-      const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-      stub.autoRelease(clock);
+      const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
       const pool = new ConnectionPool({
         deadTimeout: 10000
       });
@@ -186,7 +186,7 @@ describe('Connection Pool', function () {
 
       _.each(pingQueue, function (conn) {
         pool.addConnection(conn);
-        stub(conn, 'ping', function (params, cb) {
+        sandbox.stub(conn, 'ping').callsFake(function (params, cb) {
           if (typeof params === 'function') {
             cb = params;
           }
@@ -253,8 +253,7 @@ describe('Connection Pool', function () {
     });
 
     it('clears and resets the timeout when a connection redies', function () {
-      const clock = sinon.useFakeTimers();
-      stub.autoRelease(clock);
+      const clock = sandbox.useFakeTimers();
 
       connection.setStatus('dead');
       expect(_.size(clock.timers)).to.eql(1);

@@ -2,11 +2,11 @@ const Transport = require('../../transport');
 const Host = require('../../host');
 const errors = require('../../errors');
 
-const sinon = require('sinon');
 const expect = require('expect.js');
 const _ = require('lodash');
 const nodeList = require('../../../../test_fixtures/short_node_list.5.0.json');
-const stub = require('../../../../test_utils/auto_release_stub').make();
+
+const sandbox = require('sinon').sandbox.create();
 
 /**
  * Allows the tests call #request() without it doing anything past trying to select
@@ -14,7 +14,7 @@ const stub = require('../../../../test_utils/auto_release_stub').make();
  * @param  {Transport} tran - the transport to neuter
  */
 function shortCircuitRequest(tran, delay) {
-  stub(tran.connectionPool, 'select', function (cb) {
+  sandbox.stub(tran.connectionPool, 'select').callsFake(function (cb) {
     setTimeout(cb, delay);
   });
 }
@@ -27,6 +27,7 @@ function CustomConnectionPool() {}
 CustomConnectionPool.prototype = Object.create(Transport.connectionPools.main.prototype);
 
 describe('Transport Class', function () {
+  afterEach(() => sandbox.restore());
 
   describe('Constructor', function () {
     it('Accepts a log class and intanciates it at this.log', function () {
@@ -66,7 +67,7 @@ describe('Transport Class', function () {
     });
 
     it('calls sniff immediately if sniffOnStart is true', function () {
-      stub(Transport.prototype, 'sniff');
+      sandbox.stub(Transport.prototype, 'sniff');
       const trans = new Transport({
         sniffOnStart: true
       });
@@ -75,9 +76,8 @@ describe('Transport Class', function () {
     });
 
     it('schedules a sniff when sniffInterval is set', function () {
-      const clock = sinon.useFakeTimers('setTimeout');
-      stub.autoRelease(clock);
-      stub(Transport.prototype, 'sniff');
+      const clock = sandbox.useFakeTimers('setTimeout');
+      sandbox.stub(Transport.prototype, 'sniff');
 
       const trans = new Transport({
         sniffInterval: 25000
@@ -184,7 +184,7 @@ describe('Transport Class', function () {
       });
 
       it('accepts the config value on the host: key', function () {
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
         const trans = new Transport({
           host: 'localhost'
         });
@@ -196,7 +196,7 @@ describe('Transport Class', function () {
       });
 
       it('accepts the config value on the hosts: key', function () {
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
         const trans = new Transport({
           hosts: 'localhost'
         });
@@ -208,7 +208,7 @@ describe('Transport Class', function () {
       });
 
       it('accepts A host object as the config', function () {
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
         const h = new Host('localhost');
         const trans = new Transport({
           host: h
@@ -219,7 +219,7 @@ describe('Transport Class', function () {
       });
 
       it('accepts strings as the config', function () {
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
         const trans = new Transport({
           hosts: [
             'localhost:8888',
@@ -236,7 +236,7 @@ describe('Transport Class', function () {
       });
 
       it('accepts objects as the config', function () {
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
         const trans = new Transport({
           hosts: [
             {
@@ -260,7 +260,7 @@ describe('Transport Class', function () {
       it('passes the global config to the objects', function () {
         // since we can't mock out the Host constructor to see it's args, we will just
         // check that it's getting the suggestCompression setting
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
 
         let trans = new Transport({
           suggestCompression: true,
@@ -286,8 +286,8 @@ describe('Transport Class', function () {
     describe('randomizeHosts options', function () {
       it('calls _.shuffle be default', function () {
         const _ = require('../../utils');
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
-        stub(_, 'shuffle');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(_, 'shuffle');
         new Transport({
           hosts: 'localhost'
         });
@@ -296,8 +296,8 @@ describe('Transport Class', function () {
       });
       it('skips the call to _.shuffle when false', function () {
         const _ = require('../../utils');
-        stub(Transport.connectionPools.main.prototype, 'setHosts');
-        stub(_, 'shuffle');
+        sandbox.stub(Transport.connectionPools.main.prototype, 'setHosts');
+        sandbox.stub(_, 'shuffle');
         new Transport({
           hosts: 'localhost',
           randomizeHosts: false
@@ -323,7 +323,7 @@ describe('Transport Class', function () {
 
     beforeEach(function () {
       trans = new Transport({ suggestCompression: true });
-      stub(trans, 'request', function (params, cb) {
+      sandbox.stub(trans, 'request').callsFake(function (params, cb) {
         process.nextTick(function () {
           cb(void 0, {
             ok: true,
@@ -333,7 +333,7 @@ describe('Transport Class', function () {
         });
       });
 
-      stub(trans.connectionPool, 'setHosts');
+      sandbox.stub(trans.connectionPool, 'setHosts');
     });
 
     it('works without a callback', function (done) {
@@ -424,8 +424,8 @@ describe('Transport Class', function () {
   describe('#request', function () {
     it('logs when it begins', function (done) {
       const trans = new Transport();
-      stub(trans.log, 'debug');
-      stub(trans.connectionPool, 'select', function (cb) {
+      sandbox.stub(trans.log, 'debug');
+      sandbox.stub(trans.connectionPool, 'select').callsFake(function (cb) {
         // simulate "no connections"
         process.nextTick(cb);
       });
@@ -438,8 +438,8 @@ describe('Transport Class', function () {
 
     it('rejects GET requests with a body (callback)', function (done) {
       const trans = new Transport();
-      stub(trans.log, 'debug');
-      stub(trans.connectionPool, 'select', function (cb) {
+      sandbox.stub(trans.log, 'debug');
+      sandbox.stub(trans.connectionPool, 'select').callsFake(function (cb) {
         // simulate "no connections"
         process.nextTick(cb);
       });
@@ -455,8 +455,8 @@ describe('Transport Class', function () {
 
     it('rejects GET requests with a body (promise)', function (done) {
       const trans = new Transport();
-      stub(trans.log, 'debug');
-      stub(trans.connectionPool, 'select', function (cb) {
+      sandbox.stub(trans.log, 'debug');
+      sandbox.stub(trans.connectionPool, 'select').callsFake(function (cb) {
         // simulate "no connections"
         process.nextTick(cb);
       });
@@ -484,7 +484,7 @@ describe('Transport Class', function () {
           name: 'ഢധയമബ'
         };
 
-        stub(conn, 'request', function (params) {
+        sandbox.stub(conn, 'request').callsFake(function (params) {
           expect(params.headers).to.have.property('content-type', 'application/json');
           expect(JSON.parse(params.body)).to.eql(body);
           done();
@@ -504,7 +504,7 @@ describe('Transport Class', function () {
           { name: 'ഢധയമബ' }
         ];
 
-        stub(conn, 'request', function (params) {
+        sandbox.stub(conn, 'request').callsFake(function (params) {
           expect(params.headers).to.have.property('content-type', 'application/x-ndjson');
           expect(params.body).to.eql(
             '{"_id":"simple body"}\n' +
@@ -542,7 +542,7 @@ describe('Transport Class', function () {
     describe('when selecting a connection', function () {
       it('logs a warning, and responds with NoConnection when it receives nothing', function (done) {
         const trans = new Transport();
-        stub(trans.log, 'warning');
+        sandbox.stub(trans.log, 'warning');
         trans.request({}, function (err, body, status) {
           expect(trans.log.warning.callCount).to.eql(1);
           expect(err).to.be.a(errors.NoConnections);
@@ -583,7 +583,7 @@ describe('Transport Class', function () {
         });
         const conn = getConnection(trans);
 
-        stub(conn, 'request', function () {
+        sandbox.stub(conn, 'request').callsFake(function () {
           done();
         });
 
@@ -619,7 +619,7 @@ describe('Transport Class', function () {
           // trigger a select so that we can harvest the connection list
           trans.connectionPool.select(_.noop);
           _.each(connections, function (conn) {
-            stub(conn, 'request', failRequest);
+            sandbox.stub(conn, 'request').callsFake(failRequest);
           });
 
           trans.request({}, function (err, resp, body) {
@@ -709,7 +709,7 @@ describe('Transport Class', function () {
         });
 
         const con = getConnection(tran);
-        stub(con, 'request', function () {
+        sandbox.stub(con, 'request').callsFake(function () {
           throw new Error('Request should not have been called.');
         });
 
@@ -723,7 +723,7 @@ describe('Transport Class', function () {
 
         const con = getConnection(tran);
         let ret; // eslint-disable-line prefer-const
-        stub(con, 'request', function () {
+        sandbox.stub(con, 'request').callsFake(function () {
           process.nextTick(function () {
             ret.abort();
           });
@@ -740,7 +740,7 @@ describe('Transport Class', function () {
         });
 
         const con = getConnection(tran);
-        stub(con, 'request', function (params, cb) {
+        sandbox.stub(con, 'request').callsFake(function (params, cb) {
           cb();
         });
 
@@ -754,8 +754,7 @@ describe('Transport Class', function () {
 
     describe('timeout', function () {
       it('uses 30 seconds for the default', function () {
-        const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-        stub.autoRelease(clock);
+        const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
         const tran = new Transport({});
 
         const prom = tran.request({});
@@ -769,8 +768,7 @@ describe('Transport Class', function () {
         });
       });
       it('inherits the requestTimeout from the transport', function () {
-        const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-        stub.autoRelease(clock);
+        const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
         const tran = new Transport({
           requestTimeout: 5000
         });
@@ -789,10 +787,9 @@ describe('Transport Class', function () {
 
       _.each([false, 0, null], function (falsy) {
         it('skips the timeout when it is ' + falsy, function () {
-          const clock = sinon.useFakeTimers();
-          stub.autoRelease(clock);
+          const clock = sandbox.useFakeTimers();
           const tran = new Transport({});
-          stub(tran.connectionPool, 'select', function () {});
+          sandbox.stub(tran.connectionPool, 'select').callsFake(function () {});
 
           tran.request({
             requestTimeout: falsy
@@ -808,7 +805,7 @@ describe('Transport Class', function () {
     it('accepts strings, host objects, and host configs', function () {
 
       const trans = new Transport({ suggestCompression: true });
-      stub(trans.connectionPool, 'setHosts');
+      sandbox.stub(trans.connectionPool, 'setHosts');
 
       trans.setHosts([
         { host: 'first.server', port: 9200 },
@@ -816,7 +813,7 @@ describe('Transport Class', function () {
         new Host('http://third.server:9200')
       ]);
 
-      sinon.assert.calledOnce(trans.connectionPool.setHosts);
+      sandbox.assert.calledOnce(trans.connectionPool.setHosts);
       let host;
       const hosts = trans.connectionPool.setHosts.firstCall.args[0];
 
@@ -845,8 +842,8 @@ describe('Transport Class', function () {
   describe('#close', function () {
     it('proxies the call to it\'s log and connection pool', function () {
       const tran = new Transport();
-      stub(tran.connectionPool, 'close');
-      stub(tran.log, 'close');
+      sandbox.stub(tran.connectionPool, 'close');
+      sandbox.stub(tran.log, 'close');
 
       tran.close();
 

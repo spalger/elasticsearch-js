@@ -1,20 +1,20 @@
 describe('JSON serializer', function () {
   const JsonSerializer = require('../../serializers/json');
   const expect = require('expect.js');
-  const sinon = require('sinon');
-  const stub = require('../../../../test_utils/auto_release_stub').make();
 
   function makeSerializer() {
     return new JsonSerializer();
   }
 
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
+
   describe('#serialize', function () {
     it('defers to JSON.stringify', function () {
-      const stub = sinon.stub(JSON, 'stringify');
+      const stub = sandbox.stub(JSON, 'stringify');
       const ser = makeSerializer();
       ser.serialize({ some: 'object' });
       expect(stub.callCount).to.eql(1);
-      stub.restore();
     });
 
     it('does not modify strings', function () {
@@ -43,7 +43,7 @@ describe('JSON serializer', function () {
 
   describe('#deserialize', function () {
     it('defers to JSON.parse', function () {
-      stub(JSON, 'parse');
+      sandbox.stub(JSON, 'parse');
       const ser = makeSerializer();
       ser.deserialize('{ "some": "JSON" }');
       expect(JSON.parse.callCount).to.eql(1);

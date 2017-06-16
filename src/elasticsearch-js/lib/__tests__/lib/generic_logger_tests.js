@@ -1,10 +1,11 @@
 const expect = require('expect.js');
 const Log = require('../../log');
 const now = new Date('2013-03-01T00:00:00Z');
-const sinon = require('sinon');
 
 module.exports = function (makeLogger) {
-  const stub = require('../../../../test_utils/auto_release_stub').make();
+  const sandbox = require('sinon').sandbox.create();
+  afterEach(() => sandbox.restore());
+
   const parent = new Log();
 
   afterEach(function () {
@@ -14,7 +15,7 @@ module.exports = function (makeLogger) {
   describe('Constuctor', function () {
     it('calls setupListeners, passes its new levels', function () {
       let logger = makeLogger(parent);
-      stub(logger.constructor.prototype, 'setupListeners');
+      sandbox.stub(logger.constructor.prototype, 'setupListeners');
       parent.close();
 
       logger = makeLogger(parent);
@@ -30,7 +31,7 @@ module.exports = function (makeLogger) {
   describe('listening levels', function () {
     it('calls cleanUpListeners when the listeners are being setup', function () {
       const logger = makeLogger();
-      stub(logger, 'cleanUpListeners');
+      sandbox.stub(logger, 'cleanUpListeners');
       logger.setupListeners([]);
       expect(logger.cleanUpListeners).to.have.property('callCount', 1);
     });
@@ -86,7 +87,7 @@ module.exports = function (makeLogger) {
 
     it('emits events because something is listening', function () {
       makeLogger(parent, 'trace');
-      stub(parent, 'emit');
+      sandbox.stub(parent, 'emit');
 
       parent.error(new Error('error message'));
       expect(parent.emit.lastCall.args[0]).to.eql('error');
@@ -107,7 +108,7 @@ module.exports = function (makeLogger) {
 
   describe('#timestamp', function () {
     it('returns in the right format', function () {
-      stub.autoRelease(sinon.useFakeTimers(now.getTime()));
+      sandbox.useFakeTimers(now.getTime());
       const logger = makeLogger();
       expect(logger.timestamp()).to.eql('2013-03-01T00:00:00Z');
     });
@@ -115,7 +116,7 @@ module.exports = function (makeLogger) {
 
   describe('#format', function () {
     it('returns a single string with the message indented', function () {
-      stub.autoRelease(sinon.useFakeTimers(now.getTime()));
+      sandbox.useFakeTimers(now.getTime());
       const logger = makeLogger();
       expect(logger.format('LABEL', 'MSG')).to.eql(
         'LABEL: 2013-03-01T00:00:00Z\n' +
@@ -125,7 +126,7 @@ module.exports = function (makeLogger) {
     });
 
     it('properly indents multi-line messages', function () {
-      stub.autoRelease(sinon.useFakeTimers(now.getTime()));
+      sandbox.useFakeTimers(now.getTime());
       const logger = makeLogger();
       expect(logger.format('LABEL', 'MSG\nwith\nseveral lines')).to.eql(
         'LABEL: 2013-03-01T00:00:00Z\n' +
@@ -140,7 +141,7 @@ module.exports = function (makeLogger) {
   describe('#onError', function () {
     it('uses the Error name when it is not just "Error"', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('TypeError');
       });
 
@@ -150,7 +151,7 @@ module.exports = function (makeLogger) {
 
     it('uses "ERROR" when the error name is "Error"', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('ERROR');
       });
 
@@ -162,7 +163,7 @@ module.exports = function (makeLogger) {
   describe('#onWarning', function () {
     it('uses the "WARNING" label', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('WARNING');
       });
       logger.onWarning('message');
@@ -171,7 +172,7 @@ module.exports = function (makeLogger) {
 
     it('echos the message', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label, msg) {
+      sandbox.stub(logger, 'write').callsFake(function (label, msg) {
         expect(msg).to.eql('message');
       });
 
@@ -183,7 +184,7 @@ module.exports = function (makeLogger) {
   describe('#onInfo', function () {
     it('uses the "INFO" label', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('INFO');
       });
       logger.onInfo('message');
@@ -192,7 +193,7 @@ module.exports = function (makeLogger) {
 
     it('echos the message', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label, msg) {
+      sandbox.stub(logger, 'write').callsFake(function (label, msg) {
         expect(msg).to.eql('message');
       });
 
@@ -204,7 +205,7 @@ module.exports = function (makeLogger) {
   describe('#onDebug', function () {
     it('uses the "DEBUG" label', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('DEBUG');
       });
       logger.onDebug('message');
@@ -213,7 +214,7 @@ module.exports = function (makeLogger) {
 
     it('echos the message', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label, msg) {
+      sandbox.stub(logger, 'write').callsFake(function (label, msg) {
         expect(msg).to.eql('message');
       });
 
@@ -225,7 +226,7 @@ module.exports = function (makeLogger) {
   describe('#onTrace', function () {
     it('uses the "TRACE" label', function () {
       const logger = makeLogger();
-      stub(logger, 'write', function (label) {
+      sandbox.stub(logger, 'write').callsFake(function (label) {
         expect(label).to.eql('TRACE');
       });
       logger.onTrace(Log.normalizeTraceArgs('GET', 'http://place/thing?me=true', '{}', '{"ok": true}', 200));

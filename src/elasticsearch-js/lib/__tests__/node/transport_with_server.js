@@ -3,11 +3,12 @@ const ConnectionPool = require('../../connection_pool');
 const errors = require('../../errors');
 const expect = require('expect.js');
 
-const sinon = require('sinon');
 const nock = require('../../../../test_mocks/server.js');
 const through2 = require('through2');
 const _ = require('lodash');
-const stub = require('../../../../test_utils/auto_release_stub').make();
+
+const sandbox = require('sinon').sandbox.create();
+afterEach(() => sandbox.restore());
 
 describe('Transport + Mock server', function () {
   describe('#request', function () {
@@ -244,8 +245,7 @@ describe('Transport + Mock server', function () {
 
     describe('timeout', function () {
       it('clears the timeout when the request is complete', function () {
-        const clock = sinon.useFakeTimers('setTimeout', 'clearTimeout');
-        stub.autoRelease(clock);
+        const clock = sandbox.useFakeTimers('setTimeout', 'clearTimeout');
         const tran = new Transport({
           host: 'http://localhost:9200'
         });
@@ -288,8 +288,7 @@ describe('Transport + Mock server', function () {
 
     describe('sniffOnConnectionFault', function () {
       it('schedules a sniff when sniffOnConnectionFault is set and a connection failes', function () {
-        const clock = sinon.useFakeTimers('setTimeout');
-        stub.autoRelease(clock);
+        const clock = sandbox.useFakeTimers('setTimeout');
 
         nock('http://esbox.1.com')
           .get('/')
@@ -306,8 +305,8 @@ describe('Transport + Mock server', function () {
             return str;
           });
 
-        stub(ConnectionPool.prototype, '_onConnectionDied');
-        stub(Transport.prototype, 'sniff');
+        sandbox.stub(ConnectionPool.prototype, '_onConnectionDied');
+        sandbox.stub(Transport.prototype, 'sniff');
         const tran = new Transport({
           hosts: 'http://esbox.1.com',
           sniffOnConnectionFault: true,

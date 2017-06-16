@@ -20,8 +20,6 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const through2 = require('through2');
-const map = require('through2-map');
-const split = require('split');
 const join = require('path').join;
 const cp = require('child_process');
 const chalk = require('chalk');
@@ -52,73 +50,6 @@ task('NODE_INTEGRATION', true, function () {
   .then(function () {
     const target = (JENKINS ? 'jenkins_' : '') + 'integration:' + branch;
     return grunt('esvm:ci_env', 'mocha_' + target, 'esvm_shutdown:ci_env');
-  });
-});
-
-task('SAUCE_LABS', false, function () {
-  return new Promise(function (resolve, reject) {
-    // build the clients and start the server, once the server is ready call trySaucelabs()
-    const serverTasks = ['browser_clients:build', 'run:browser_test_server:keepalive'];
-    spawn(GRUNT, serverTasks, function (proc) {
-      const toLines = split();
-
-      proc.stdout
-      .pipe(toLines)
-      .pipe(through2(function (line, enc, cb) {
-        cb();
-
-        if (String(line).indexOf('listening on port 8000') === -1) return;
-
-
-        trySaucelabs()
-        .finally(function () { if (proc) proc.kill(); })
-        .then(resolve, reject);
-
-        proc.on('exit', function () { proc = null; });
-        proc.stdout.unpipe(toLines);
-        toLines.end();
-      }));
-    })
-    // ignore server errors
-    .catch(_.noop);
-
-    // attempt to run tests on saucelabs and retry if it fails
-    let saucelabsAttempts = 0;
-    function trySaucelabs() {
-      saucelabsAttempts++;
-      return new Promise(function (resolve, reject) {
-        log(chalk.green('saucelabs attempt #', saucelabsAttempts));
-        spawn(GRUNT, ['saucelabs-mocha'], function (cp) {
-
-          let failedTests = 0;
-          cp.stdout
-          .pipe(split())
-          .pipe(map(function (line) {
-            failedTests += String(line).trim() === 'Passed: false' ? 1 : 0;
-          }));
-
-          cp.on('error', reject);
-          cp.on('exit', function (code) {
-            if (code > 0) {
-              if (failedTests > 0) {
-                return reject(new Error('Browser tests failed'));
-              }
-
-              if (saucelabsAttempts >= 3) {
-                return reject(new Error('Saucelabs is like really really down. Tried 3 times'));
-              }
-
-              log(chalk.blue('trying saucelabs again...'));
-              return trySaucelabs().then(resolve, reject);
-            }
-
-            return resolve();
-          });
-        })
-        // swallow spawn() errors, custom error handler in place
-        .catch(_.noop);
-      });
-    }
   });
 });
 

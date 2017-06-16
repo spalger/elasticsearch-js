@@ -9,14 +9,6 @@ const config = {
       ]
     }
   },
-  browser_test_server: {
-    exec: 'node ./test/utils/server',
-    options: {
-      wait: false,
-      quiet: false,
-      ready: /listening/
-    }
-  },
   clone_bower_repo: {
     exec: [
       'test -d src/bower_es_js',

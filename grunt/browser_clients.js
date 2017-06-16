@@ -1,15 +1,5 @@
 module.exports = function (grunt) {
 
-  grunt.registerTask('browser_clients:dev', [
-    'run:browser_test_server:keepalive'
-  ]);
-
-  grunt.registerTask('browser_clients:test', [
-    'browser_clients:build',
-    'run:browser_test_server',
-    'saucelabs-mocha:all'
-  ]);
-
   grunt.registerTask('browser_clients:build', function () {
     // prevent this from running more than once accidentally
     grunt.task.renameTask('browser_clients:build', 'browser_clients:rebuild');

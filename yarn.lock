@@ -61,13 +61,6 @@ acorn@^5.0.0, acorn@^5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.0.3.tgz#c460df08491463f028ccb82eab3730bf01087b3d"
 
-agent-base@2:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-2.1.1.tgz#d6de10d5af6132d5bd692427d46fc538539094c7"
-  dependencies:
-    extend "~3.0.0"
-    semver "~5.0.1"
-
 agentkeepalive@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
@@ -1793,7 +1786,7 @@ dateformat@~1.0.12:
     get-stdin "^4.0.1"
     meow "^3.3.0"
 
-debug@*, debug@2, debug@2.6.8, debug@^2.1.1, debug@^2.2.0, debug@^2.6.8:
+debug@*, debug@2.6.8, debug@^2.1.1, debug@^2.2.0, debug@^2.6.8:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
@@ -2432,7 +2425,7 @@ express@~3.4.7:
     range-parser "0.0.4"
     send "0.1.4"
 
-extend@3, extend@^3.0.0, extend@~3.0.0:
+extend@~3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
@@ -2488,13 +2481,6 @@ faye-websocket@~0.11.0:
   resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.11.1.tgz#f0efe18c4f56e4f40afc7e06c719fd5ee6188f38"
   dependencies:
     websocket-driver ">=0.5.1"
-
-fg-lodash@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/fg-lodash/-/fg-lodash-0.0.2.tgz#988352537f427da6af222129bb63acca49e62fa3"
-  dependencies:
-    lodash "^2.4.1"
-    underscore.string "~2.3.3"
 
 figures@^1.0.1, figures@^1.3.5:
   version "1.7.0"
@@ -3079,17 +3065,6 @@ grunt-s3@~0.2.0-alpha.3:
     temporary "0.0.5"
     underscore.deferred "~0.1.4"
 
-grunt-saucelabs@^8.6.2:
-  version "8.6.3"
-  resolved "https://registry.yarnpkg.com/grunt-saucelabs/-/grunt-saucelabs-8.6.3.tgz#ecc5140badfd77e79eb76abde28da719eaf0f01e"
-  dependencies:
-    colors "~1.1.2"
-    lodash "~4.0.0"
-    q "~1.4.1"
-    requestretry "~1.9.0"
-    sauce-tunnel "~2.4.0"
-    saucelabs "~1.0.1"
-
 grunt-webpack@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/grunt-webpack/-/grunt-webpack-3.0.0.tgz#a95e5e5005e2458c5456c68a93da62ecb466962e"
@@ -3391,14 +3366,6 @@ http-signature@~1.1.0:
 https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
-
-https-proxy-agent@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-1.0.0.tgz#35f7da6c48ce4ddbfa264891ac593ee5ff8671e6"
-  dependencies:
-    agent-base "2"
-    debug "2"
-    extend "3"
 
 iconv-lite@0.4.13:
   version "0.4.13"
@@ -4233,7 +4200,7 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@2.4.2, lodash@^2.4.1, lodash@~2.4.1:
+lodash@2.4.2, lodash@~2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
 
@@ -4248,10 +4215,6 @@ lodash@^4.0.0, lodash@^4.0.1, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lo
 lodash@~0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-0.9.2.tgz#8f3499c5245d346d682e5b0d3b40767e09f1a92c"
-
-lodash@~4.0.0:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.0.1.tgz#cd8c902c9e03f2e69ce3e0e456d505ab89eb98f4"
 
 lodash@~4.3.0:
   version "4.3.0"
@@ -5404,7 +5367,7 @@ punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
-q@^1.1.2, q@~1.4.1:
+q@^1.1.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"
 
@@ -5770,7 +5733,7 @@ request@2.53.0:
     tough-cookie ">=0.12.0"
     tunnel-agent "~0.4.0"
 
-request@^2.67.0, request@^2.74.x, request@^2.81.0:
+request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -5820,15 +5783,6 @@ request@~2.65.0:
     stringstream "~0.0.4"
     tough-cookie "~2.2.0"
     tunnel-agent "~0.4.1"
-
-requestretry@~1.9.0:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/requestretry/-/requestretry-1.9.1.tgz#0a2a004eaf211969c4cc2cfebf3fe9e57b92c74e"
-  dependencies:
-    extend "^3.0.0"
-    fg-lodash "0.0.2"
-    request "^2.74.x"
-    when "~3.7.5"
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -5950,20 +5904,6 @@ samsam@1.1.2, samsam@~1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.1.2.tgz#bec11fdc83a9fda063401210e40176c3024d1567"
 
-sauce-tunnel@~2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/sauce-tunnel/-/sauce-tunnel-2.4.0.tgz#fb436f203deb7a8c53ed583c2569870de5b32b43"
-  dependencies:
-    chalk "^1.1.1"
-    request "^2.67.0"
-    split "^1.0.0"
-
-saucelabs@~1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/saucelabs/-/saucelabs-1.0.1.tgz#b50a100d9c5a4140748b35335a6e5d70017dadf9"
-  dependencies:
-    https-proxy-agent "^1.0.0"
-
 sax@0.5.x:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/sax/-/sax-0.5.8.tgz#d472db228eb331c2506b0e8c15524adb939d12c1"
@@ -6001,10 +5941,6 @@ semver-diff@^2.0.0:
 semver@^4.3.6, semver@~4.3.6:
   version "4.3.6"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
-
-semver@~5.0.1:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
 
 send@0.1.4:
   version "0.1.4"
@@ -6219,12 +6155,6 @@ speedline@1.2.0:
     jpeg-js "^0.1.2"
     loud-rejection "^1.3.0"
     meow "^3.7.0"
-
-split@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/split/-/split-1.0.0.tgz#c4395ce683abcd254bc28fe1dabb6e5c27dcffae"
-  dependencies:
-    through "2"
 
 split@~0.3.2:
   version "0.3.3"
@@ -6923,10 +6853,6 @@ whatwg-url@4.0.0:
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
-
-when@~3.7.5:
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/when/-/when-3.7.8.tgz#c7130b6a7ea04693e842cdc9e7a1f2aa39a39f82"
 
 whet.extend@~0.9.9:
   version "0.9.9"

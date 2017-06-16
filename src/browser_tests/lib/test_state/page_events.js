@@ -1,6 +1,6 @@
 import Rx from 'rxjs/Rx';
 
-import { log } from './log';
+import { log } from '../log';
 import { observeBrowserMessages } from './browser_messages';
 
 export function observePageEvents(remote) {

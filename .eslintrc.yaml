@@ -3,3 +3,4 @@ extends: "@elastic/eslint-config-kibana"
 
 rules:
   import/no-dynamic-require: error
+  no-loop-func: off

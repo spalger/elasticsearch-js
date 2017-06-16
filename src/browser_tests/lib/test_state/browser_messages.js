@@ -1,6 +1,6 @@
 import Rx from 'rxjs/Rx';
 
-import { log } from './log';
+import { log } from '../log';
 
 export function observeBrowserMessages(client) {
   return new Rx.Observable(observer => {

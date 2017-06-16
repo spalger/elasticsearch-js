@@ -26,7 +26,7 @@ export class ProgressLogger {
       total,
       clear: true,
       stream,
-      width: process.stdout.columns / 3
+      width: Math.round(process.stdout.columns / 3)
     });
   }
 

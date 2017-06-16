@@ -1,61 +1,62 @@
-import { Command } from 'commander';
+import yargs from 'yargs';
 
 import {
-  withChrome,
-  withServer,
-  withChromeRemote,
-  observeTestState,
-  createLogReporter,
-  setLogLevel,
-  log,
-} from './lib';
+  main,
+  serverAction,
+  testsAction,
+  serverAndTestsAction
+} from './cli_actions';
 
-const SECOND = 1000;
-const MINUTE = SECOND * 60;
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms).unref());
-
-const cmd = new Command('node scripts/browser_tests');
-cmd
-  .description('Run browser tests in an instance of headless chrome')
-  .option('--silent', 'log nothing')
-  .option('--quiet', 'only log errors')
-  .option('--debug', 'turn on a little extra logging')
-  .option('--verbose', 'for people who love console.log');
-
-const URL = 'http://localhost:8080';
-const URLS = [
-  URL + '/unit.html',
-  URL + '/angular.html',
-  URL + '/browser.html',
-  URL + '/jquery.html',
-];
-
-async function main() {
-  if (cmd.silent) setLogLevel('silent');
-  else if (cmd.quiet) setLogLevel('error');
-  else if (cmd.debug) setLogLevel('debug');
-  else if (cmd.verbose) setLogLevel('verbose');
-  else setLogLevel('info');
-
-  await withChrome(async chrome => {
-    await withServer(URL, async () => {
-      for (const url of URLS) {
-        log.info('');
-        log.info('testing', url);
-        await withChromeRemote(chrome, url, async remote => {
-          const testState$ = observeTestState(remote);
-          await Promise.race([
-            createLogReporter(testState$).done(),
-            delay(3 * MINUTE).then(() => {
-              throw new Error('Timeout: tests took over 3 minutes to compelte');
-            }),
-          ]);
-        });
-      }
-    });
-  });
-}
-
-main().catch(error => {
-  log.error('FATAL ERROR', error.stack);
-});
+yargs
+  .usage('node scripts/browser_tests [command] <flags>')
+  .help('--help', 'Run browser tests in an instance of headless chrome')
+  .option('url', {
+    type: 'string',
+    description: 'URL to use for the server',
+    default: 'http://localhost:8080'
+  })
+  .option('chromePort', {
+    type: 'number',
+    description: 'port to use for the chrome debugger',
+    default: 9922
+  })
+  .option('silent', {
+    type: 'boolean',
+    description: 'log nothing'
+  })
+  .option('quiet', {
+    type: 'boolean',
+    description: 'only log errors'
+  })
+  .option('debug', {
+    type: 'boolean',
+    description: 'turn on a little extra logging'
+  })
+  .option('verbose', {
+    type: 'boolean',
+    description: 'for people who love console.log'
+  })
+  .command({
+    command: 'server',
+    description: 'start the server and chrome but do not run tests',
+    handler(argv) {
+      main(argv, serverAction);
+    }
+  })
+  .command({
+    command: 'runner',
+    description: 'run the tests against an already running server instance',
+    handler(argv) {
+      main(argv, testsAction);
+    }
+  })
+  .command({
+    command: 'test',
+    aliases: '*',
+    description: 'run the server, then the tests, and then quit',
+    handler(argv) {
+      main(argv, serverAndTestsAction);
+    }
+  })
+  .demandCommand()
+  .argv;

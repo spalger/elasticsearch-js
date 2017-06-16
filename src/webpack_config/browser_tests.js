@@ -1,3 +1,5 @@
+const { relative } = require('path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -9,14 +11,17 @@ const OUTPUT_DIR = rel('tmp/browser_tests');
 module.exports = {
   context: CONTEXT_DIR,
   entry: {
-    angular: ['./mocha/setup', './entry/angular.js', './mocha/start'],
-    browser: ['./mocha/setup', './entry/browser.js', './mocha/start'],
-    jquery: ['./mocha/setup', './entry/jquery.js', './mocha/start']
+    angular: ['./harness/setup', './entry/angular.js', './harness/run'],
+    browser: ['./harness/setup', './entry/browser.js', './harness/run'],
+    jquery: ['./harness/setup', './entry/jquery.js', './harness/run'],
+    unit: ['./harness/setup', './entry/unit.js', './harness/run'],
   },
   output: {
     path: OUTPUT_DIR,
     filename: '[name].js',
+    devtoolModuleFilenameTemplate: info => `webpack:${relative(CONTEXT_DIR, info.resourcePath)}`
   },
+  devtool: 'cheap-source-map',
   module: {
     rules: [
       jsLoader(),
@@ -28,6 +33,12 @@ module.exports = {
         ]
       }
     ],
+  },
+  resolve: {
+    unsafeCache: true,
+    alias: {
+      'sinon$': require.resolve('sinon/pkg/sinon')
+    }
   },
   plugins: [
     new CleanWebpackPlugin([OUTPUT_DIR], {
@@ -45,6 +56,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'jquery.html',
       chunks: ['jquery']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'unit.html',
+      chunks: ['unit']
     })
   ],
   devServer: {

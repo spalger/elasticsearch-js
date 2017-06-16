@@ -1,5 +1,22 @@
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { ignoreLoader, jsLoader, rel } = require('./lib');
+
+const plugins = (type) => [
+  // clear previous build output
+  new CleanWebpackPlugin([
+    rel('dist', type ? `elasticsearch.${type}.js` : 'elasticsearch.js'),
+    rel('dist', type ? `elasticsearch.${type}.min.js` : 'elasticsearch.min.js')
+  ], {
+    root: rel(),
+    verbose: false
+  }),
+
+  // define "production" mode for code cleanup
+  new DefinePlugin({
+    'process.env.NODE_ENV': '"production"',
+  }),
+];
 
 module.exports = [
   /**
@@ -23,11 +40,7 @@ module.exports = [
         ]),
       ],
     },
-    plugins: [
-      new DefinePlugin({
-        'process.env.NODE_ENV': '"production"',
-      }),
-    ],
+    plugins: plugins(),
   },
 
   /**
@@ -50,11 +63,7 @@ module.exports = [
         ]),
       ],
     },
-    plugins: [
-      new DefinePlugin({
-        'process.env.NODE_ENV': '"production"',
-      }),
-    ],
+    plugins: plugins('angular'),
   },
 
   /**
@@ -77,10 +86,6 @@ module.exports = [
         ]),
       ],
     },
-    plugins: [
-      new DefinePlugin({
-        'process.env.NODE_ENV': '"production"',
-      }),
-    ],
+    plugins: plugins('jquery'),
   }
 ];

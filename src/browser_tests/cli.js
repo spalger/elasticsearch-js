@@ -5,6 +5,7 @@ import {
   withServer,
   withChromeRemote,
   observeTestState,
+  createLogReporter,
 } from './lib';
 
 const SECOND = 1000;
@@ -16,6 +17,7 @@ cmd.description('Run browser tests in an instance of headless chrome');
 
 const URL = 'http://localhost:8080';
 const URLS = [
+  URL + '/unit.html',
   URL + '/angular.html',
   URL + '/browser.html',
   URL + '/jquery.html',
@@ -28,23 +30,13 @@ async function main() {
         console.log('');
         console.log('testing', url);
         await withChromeRemote(chrome, url, async remote => {
-          const results = await Promise.race([
-            observeTestState(remote)
-              .filter(state => state.complete)
-              .first()
-              .toPromise(),
-
+          const testState$ = observeTestState(remote);
+          await Promise.race([
+            createLogReporter(testState$).done(),
             delay(3 * MINUTE).then(() => {
               throw new Error('Timeout: tests took over 3 minutes to compelte');
             }),
           ]);
-
-          console.log('  pass:', results.stats.passes);
-          console.log('  fail:', results.stats.failures);
-          console.log('  pending:', results.stats.pending);
-          console.log('  total:', results.stats.tests);
-          console.log('------------------');
-          console.log('');
         });
       }
     });

@@ -16,9 +16,9 @@ export function observePageEvents(remote) {
 
     Rx.Observable.fromEvent(remote, 'Runtime.consoleAPICalled')
       .map(({ type, args }) => ({
-        type: 'console',
+        type: 'consoleCall',
         payload: {
-          api: `console.${type}`,
+          method: type,
           args: args.map(inspectRemoteObject)
         }
       })),

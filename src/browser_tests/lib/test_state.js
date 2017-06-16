@@ -25,7 +25,7 @@ export function observeTestState(remote) {
             ...state,
             consoleCalls: [
               ...state.consoleCalls,
-              state.payload
+              event.payload
             ]
           };
 

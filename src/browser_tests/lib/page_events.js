@@ -1,7 +1,6 @@
 import Rx from 'rxjs/Rx';
 
 import { observeBrowserMessages } from './browser_messages';
-import { inspectRemoteObject } from './inspect';
 
 export function observePageEvents(remote) {
   return Rx.Observable.merge(
@@ -19,7 +18,7 @@ export function observePageEvents(remote) {
         type: 'consoleCall',
         payload: {
           method: type,
-          args: args.map(inspectRemoteObject)
+          args: args.map(arg => arg.preview || arg.value)
         }
       })),
 

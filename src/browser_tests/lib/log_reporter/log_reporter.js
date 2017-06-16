@@ -1,7 +1,13 @@
 import { createLogFailureObserver } from './log_failure_observer';
-import { createLogProgressOperator } from './log_progress_operator';
+import { ProgressLogger } from './progress_logger';
 
 export function createLogReporter(testState$) {
+  const progress = new ProgressLogger();
+
+  const firstState$ = testState$
+    .first()
+    .do(() => progress.start());
+
   /**
    *  Provides a single value, the final state of the tests, then
    *  completes
@@ -13,16 +19,43 @@ export function createLogReporter(testState$) {
     .first();
 
   /**
+   *  Sends console.foo() calls to the progress logger
+   *  @type {Rx.Observable}
+   */
+  const consoleCallLogging$ = testState$
+    .map(state => state.consoleCalls && state.consoleCalls[state.consoleCalls.length - 1])
+    .distinctUntilChanged()
+    .takeUntil(finalState$)
+    .filter(Boolean)
+    .do(call => {
+      progress.consoleCall(call.method, call.args);
+    });
+
+  /**
    *  Logs a progress indicator to the console for each test added
    *  to the tests state
    *
    *  @type {Rx.Observable}
    */
-  const progress$ = testState$
+  const testLogging$ = testState$
     .map(state => state.tests && state.tests[state.tests.length - 1])
     .distinctUntilChanged()
-    .lift(createLogProgressOperator())
-    .takeUntil(finalState$);
+    .takeUntil(finalState$)
+    .do(test => {
+      progress.testComplete(test);
+    });
+
+  /**
+   *  Represents the all progress logging
+   *  @type {Rx.Observable}
+   */
+  const progressLogging$ = consoleCallLogging$
+    .merge(testLogging$)
+    .do({
+      complete() {
+        progress.end();
+      }
+    });
 
   /**
    *  Logs a failure indicator for all failed tests after the final
@@ -60,11 +93,11 @@ export function createLogReporter(testState$) {
    */
   return new class Reporter {
     async done() {
-      await Promise.all([
-        progress$.toPromise(),
-        failures$.toPromise(),
-        summary$.toPromise(),
-      ]);
+      await firstState$
+        .merge(progressLogging$)
+        .merge(failures$)
+        .merge(summary$)
+        .toPromise();
     }
   };
 }

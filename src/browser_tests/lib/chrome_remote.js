@@ -1,6 +1,8 @@
 import Rx from 'rxjs/Rx';
 import createCRI from 'chrome-remote-interface';
 
+import { log } from './log';
+
 export async function withChromeRemote(chrome, url, block) {
   let remote;
   try {
@@ -10,7 +12,7 @@ export async function withChromeRemote(chrome, url, block) {
       remote.Runtime.enable(),
     ]);
 
-    console.log('navigating to', url);
+    log.debug('navigating to', url);
     remote.Page.navigate({ url });
 
     await Rx.Observable

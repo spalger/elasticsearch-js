@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+import { log } from '../log';
+
 function color(fn, num) {
   if (num > 0) {
     return fn(num);
@@ -9,13 +11,17 @@ function color(fn, num) {
 }
 
 export function logSummary(stats) {
-  if (stats.failures > 0) {
-    console.log(chalk.red('𝘅 complete with failures'));
+  const failed = stats.failures > 0;
+
+  const logFn = failed ? log.error : log.info;
+
+  if (failed) {
+    logFn(chalk.red('𝘅 complete with failures'));
   } else {
-    console.log(chalk.green('✔ complete'));
+    logFn(chalk.green('✔ complete'));
   }
-  console.log('  pass:', color(chalk.green, stats.passes));
-  console.log('  fail:', color(chalk.red, stats.failures));
-  console.log('  pending:', color(chalk.cyan, stats.pending));
-  console.log('');
+  logFn('  pass:', color(chalk.green, stats.passes));
+  logFn('  fail:', color(chalk.red, stats.failures));
+  logFn('  pending:', color(chalk.cyan, stats.pending));
+  logFn('');
 }

@@ -1,5 +1,6 @@
 import { observePageEvents } from './page_events';
 import { Test } from './test';
+import { log } from './log';
 
 const INITIAL_STATE = {
   exceptions: [],
@@ -60,6 +61,7 @@ export function observeTestState(remote) {
           throw new Error('unexpected event ' + event.type);
       }
     }, INITIAL_STATE)
+    .do(state => log.verbose('test state', state))
     .publishReplay(1)
     .refCount();
 }

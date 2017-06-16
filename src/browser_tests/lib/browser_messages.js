@@ -1,5 +1,7 @@
 import Rx from 'rxjs/Rx';
 
+import { log } from './log';
+
 export function observeBrowserMessages(client) {
   return new Rx.Observable(observer => {
     let open = true;
@@ -24,11 +26,14 @@ export function observeBrowserMessages(client) {
       .then((resp) => {
         if (!open) return;
 
+        log.verbose('received browser message', resp.result.value);
         observer.next(resp.result.value);
         read();
       })
       .catch((error) => {
         if (!open) return;
+
+        log.error('error reading browser message', error.stack);
         observer.error(error);
       });
     }

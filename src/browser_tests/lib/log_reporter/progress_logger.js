@@ -1,7 +1,10 @@
 import { format } from 'util';
+import { PassThrough } from 'stream';
 
 import chalk from 'chalk';
 import ProgressBar from 'progress';
+
+import { testLogLevel } from '../log';
 
 function indent(columns, text) {
   const margin = ' '.repeat(columns);
@@ -18,10 +21,11 @@ export class ProgressLogger {
   lastTestMention;
 
   start(total) {
+    const stream = testLogLevel('info') ? process.stdout : new PassThrough().resume();
     this.bar = new ProgressBar('running tests [:bar] :current/:total :percent', {
       total,
       clear: true,
-      stream: process.stdout,
+      stream,
       width: process.stdout.columns / 3
     });
   }

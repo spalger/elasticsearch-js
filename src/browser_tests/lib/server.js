@@ -5,6 +5,7 @@ import { fromNode as fcb } from 'bluebird';
 import createExpress from 'express';
 
 import { withWebpackMiddleware } from './webpack_middleware';
+import { log } from './log';
 
 export async function withServer(url, block) {
   await withWebpackMiddleware(async (webpackMiddleware) => {
@@ -16,7 +17,7 @@ export async function withServer(url, block) {
 
       express.use(webpackMiddleware);
       await fcb(cb => server.listen(port, cb));
-      console.log('started server at', url);
+      log.info('started server at', url);
 
       await block(server);
     } finally {

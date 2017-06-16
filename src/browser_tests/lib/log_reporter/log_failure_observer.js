@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+import { log } from '../log';
+
 export function createLogFailureObserver() {
   return {
     next(test) {
@@ -7,11 +9,11 @@ export function createLogFailureObserver() {
         return;
       }
 
-      console.log('  ' + test.getPath());
-      console.log('    ' + test.getTitle());
-      console.log('      ' + chalk.red(test.error.message));
-      console.log('    ' + chalk.grey(test.error.stack.split('\n').slice(1).join('\n    ')));
-      console.log('');
+      log.info('  ' + test.getPath());
+      log.info('    ' + test.getTitle());
+      log.info('      ' + chalk.red(test.error.message));
+      log.info('    ' + chalk.grey(test.error.stack.split('\n').slice(1).join('\n    ')));
+      log.info('');
     }
   };
 }

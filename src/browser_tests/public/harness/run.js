@@ -17,22 +17,45 @@ const getTitleHierarchy = (test) => {
   return [test.title];
 };
 
+const getTestId = (() => {
+  let count = 0;
+  const idHistory = new WeakMap();
+
+  return (test) => {
+    if (!idHistory.has(test)) {
+      idHistory.set(test, count++);
+    }
+
+    return idHistory.get(test);
+  };
+})();
+
+const serializeTest = (test) => ({
+  id: getTestId(test),
+  type: test.type,
+  title: test.title,
+  path: getTitleHierarchy(test.parent).map(t => t.trim()).filter(Boolean),
+  speed: test.speed,
+  state: test.state || 'starting',
+  duration: test.duration,
+  pending: test.pending,
+  error: !test.err ? null : {
+    message: test.err.message,
+    stack: test.err.stack,
+  },
+});
+
+runner.on('test', (test) => {
+  sendMsg({
+    type: 'runner:test',
+    payload: serializeTest(test)
+  });
+});
+
 runner.on('test end', (test) => {
   sendMsg({
-    type: 'runner:test end',
-    payload: {
-      type: test.type,
-      title: test.title,
-      path: getTitleHierarchy(test.parent).map(t => t.trim()).filter(Boolean),
-      speed: test.speed,
-      state: test.state,
-      duration: test.duration,
-      pending: test.pending,
-      error: !test.err ? null : {
-        message: test.err.message,
-        stack: test.err.stack,
-      },
-    }
+    type: 'runner:test',
+    payload: serializeTest(test)
   });
 });
 

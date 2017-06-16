@@ -38,11 +38,12 @@ export function createLogReporter(testState$) {
    *  @type {Rx.Observable}
    */
   const testLogging$ = testState$
-    .map(state => state.tests && state.tests[state.tests.length - 1])
-    .distinctUntilChanged()
+    .mergeMap(state => state.tests)
+    .groupBy(test => test.id)
+    .mergeMap(group => group.distinctUntilChanged())
     .takeUntil(finalState$)
     .do(test => {
-      progress.testComplete(test);
+      progress.testUpdate(test);
     });
 
   /**

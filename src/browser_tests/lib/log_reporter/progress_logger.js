@@ -1,10 +1,13 @@
 import chalk from 'chalk';
 
 export class ProgressLogger {
+  currentTest;
+
   start() {
   }
 
   end() {
+    this.currentTest = undefined;
     this._exitDots();
   }
 
@@ -13,9 +16,13 @@ export class ProgressLogger {
     console.log(chalk.grey(`console.${method}:`), ...args);
   }
 
-  testComplete(test) {
+  testUpdate(test) {
     this._enterDots();
     switch (test.state) {
+      case 'starting':
+        this.currentTest = test;
+        break;
+
       case 'passed':
         process.stdout.write(chalk.green('.'));
         break;
@@ -25,8 +32,7 @@ export class ProgressLogger {
         break;
 
       default:
-        process.stdout.write(chalk.gray('.'));
-        break;
+        throw new Error('unknown test state ' + test.state);
     }
   }
 

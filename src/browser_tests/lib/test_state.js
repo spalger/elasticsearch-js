@@ -36,11 +36,12 @@ export function observeTestState(remote) {
             complete: true,
           };
 
-        case 'runner:test end':
+        case 'runner:test':
           return {
             ...state,
             tests: [
-              ...(state.tests || []),
+              ...(state.tests || [])
+                .filter(test => test.id !== event.payload.id),
               { ...event.payload }
             ],
           };

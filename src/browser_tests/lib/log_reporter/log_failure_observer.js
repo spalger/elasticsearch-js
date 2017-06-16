@@ -7,8 +7,8 @@ export function createLogFailureObserver() {
         return;
       }
 
-      console.log('  ' + chalk.grey(test.path.join(' ≫ ')));
-      console.log('    ' + chalk.white(test.title));
+      console.log('  ' + test.getPath());
+      console.log('    ' + test.getTitle());
       console.log('      ' + chalk.red(test.error.message));
       console.log('    ' + chalk.grey(test.error.stack.split('\n').slice(1).join('\n    ')));
       console.log('');

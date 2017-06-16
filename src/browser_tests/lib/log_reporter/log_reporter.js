@@ -4,9 +4,10 @@ import { ProgressLogger } from './progress_logger';
 export function createLogReporter(testState$) {
   const progress = new ProgressLogger();
 
-  const firstState$ = testState$
+  const initialState$ = testState$
+    .filter(state => state.started)
     .first()
-    .do(() => progress.start());
+    .do(state => progress.start(state.total));
 
   /**
    *  Provides a single value, the final state of the tests, then
@@ -94,7 +95,7 @@ export function createLogReporter(testState$) {
    */
   return new class Reporter {
     async done() {
-      await firstState$
+      await initialState$
         .merge(progressLogging$)
         .merge(failures$)
         .merge(summary$)

@@ -1,51 +1,69 @@
+import { format } from 'util';
+
 import chalk from 'chalk';
+import ProgressBar from 'progress';
+
+function indent(columns, text) {
+  const margin = ' '.repeat(columns);
+  text = String(text || '');
+  if (!text) return text;
+  return text
+    .split('\n')
+    .map(line => margin + line)
+    .join('\n');
+}
 
 export class ProgressLogger {
   currentTest;
+  lastTestMention;
 
-  start() {
+  start(total) {
+    this.bar = new ProgressBar('running tests [:bar] :current/:total :percent', {
+      total,
+      clear: true,
+      stream: process.stdout,
+      width: process.stdout.columns / 3
+    });
   }
 
   end() {
     this.currentTest = undefined;
-    this._exitDots();
+    if (this.lastTestMention) {
+      process.stdout.write('\n');
+      this.lastTestMention = undefined;
+    }
+  }
+
+  testMention(message) {
+    if (this.lastTestMention !== this.currentTest) {
+      this.lastTestMention = this.currentTest;
+      this.bar.interrupt('\n' + this.currentTest.getFullTitle());
+    }
+
+    this.bar.interrupt(indent(2, message));
   }
 
   consoleCall(method, args) {
-    this._exitDots();
-    console.log(chalk.grey(`console.${method}:`), ...args);
+    this.testMention(format(chalk.grey(`console.${method}:`), ...args));
   }
 
   testUpdate(test) {
-    this._enterDots();
     switch (test.state) {
       case 'starting':
         this.currentTest = test;
         break;
 
       case 'passed':
-        process.stdout.write(chalk.green('.'));
+        this.bar.tick();
         break;
 
       case 'failed':
-        process.stdout.write(chalk.red('𝘅'));
+        this.bar.tick();
+        this.testMention(chalk.red('𝘅 fail'));
         break;
 
       default:
         throw new Error('unknown test state ' + test.state);
-    }
-  }
-
-  _enterDots() {
-    if (!this._inDots) {
-      this._inDots = true;
-    }
-  }
-
-  _exitDots() {
-    if (this._inDots) {
-      this._inDots = false;
-      process.stdout.write('\n');
     }
   }
 }

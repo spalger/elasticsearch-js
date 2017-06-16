@@ -1,16 +1,26 @@
 import { observePageEvents } from './page_events';
+import { Test } from './test';
 
 const INITIAL_STATE = {
   exceptions: [],
   consoleCalls: [],
   tests: [],
-  complete: false
+  stats: null,
+  started: false,
+  complete: false,
 };
 
 export function observeTestState(remote) {
   return observePageEvents(remote)
     .scan((state, event) => {
       switch (event.type) {
+        case 'start':
+          return {
+            ...state,
+            total: event.payload.total,
+            started: true,
+          };
+
         case 'exception':
           return {
             ...state,
@@ -32,7 +42,7 @@ export function observeTestState(remote) {
         case 'runner:end':
           return {
             ...state,
-            ...event.payload,
+            stats: event.payload.stats,
             complete: true,
           };
 
@@ -42,7 +52,7 @@ export function observeTestState(remote) {
             tests: [
               ...(state.tests || [])
                 .filter(test => test.id !== event.payload.id),
-              { ...event.payload }
+              new Test(event.payload)
             ],
           };
 

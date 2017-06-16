@@ -38,8 +38,7 @@ export function createLogReporter(testState$) {
     .filter(Boolean)
     .do(call => {
       progress.consoleCall(call.method, call.args);
-    })
-    .share();
+    });
 
   /**
    *  Logs a progress indicator to the console for each test added
@@ -54,8 +53,7 @@ export function createLogReporter(testState$) {
     .takeUntil(finalState$)
     .do(test => {
       progress.testUpdate(test);
-    })
-    .share();
+    });
 
   /**
    *  Represents the all progress logging
@@ -81,7 +79,8 @@ export function createLogReporter(testState$) {
     .share();
 
   /**
-   *  Logs a summary about execution after the failure logs
+   *  Logs a summary about execution (waits for the failure$ stream
+   *  to complete first)
    *
    *  @type {Rx.Observable}
    */
@@ -100,7 +99,6 @@ export function createLogReporter(testState$) {
     async done() {
       await initialState$
         .merge(progressLogging$)
-        .merge(failures$)
         .merge(summary$)
         .toPromise();
     }

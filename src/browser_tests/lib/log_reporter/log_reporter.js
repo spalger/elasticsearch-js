@@ -4,6 +4,12 @@ import { ProgressLogger } from './progress_logger';
 export function createLogReporter(testState$) {
   const progress = new ProgressLogger();
 
+  /**
+   *  Provides a single value, the first state of the tests once
+   *  started, then completes
+   *
+   *  @type {Rx.Observable}
+   */
   const initialState$ = testState$
     .filter(state => state.started)
     .first()
@@ -17,7 +23,8 @@ export function createLogReporter(testState$) {
    */
   const finalState$ = testState$
     .filter(state => state.complete)
-    .first();
+    .first()
+    .share();
 
   /**
    *  Sends console.foo() calls to the progress logger
@@ -30,7 +37,8 @@ export function createLogReporter(testState$) {
     .filter(Boolean)
     .do(call => {
       progress.consoleCall(call.method, call.args);
-    });
+    })
+    .share();
 
   /**
    *  Logs a progress indicator to the console for each test added
@@ -45,7 +53,8 @@ export function createLogReporter(testState$) {
     .takeUntil(finalState$)
     .do(test => {
       progress.testUpdate(test);
-    });
+    })
+    .share();
 
   /**
    *  Represents the all progress logging
@@ -67,7 +76,8 @@ export function createLogReporter(testState$) {
    */
   const failures$ = finalState$
     .mergeMap(state => state.tests)
-    .do(createLogFailureObserver());
+    .do(createLogFailureObserver())
+    .share();
 
   /**
    *  Logs a summary about execution after the failure logs

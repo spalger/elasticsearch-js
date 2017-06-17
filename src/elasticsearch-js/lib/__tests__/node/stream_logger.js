@@ -12,8 +12,8 @@ describe('Stream Logger', function () {
   afterEach(() => sandbox.restore());
 
   beforeEach(function () {
-    stub(stream, 'write');
-    stub(stream, 'end');
+    sandbox.stub(stream, 'write');
+    sandbox.stub(stream, 'end');
 
     parentLog = new Log();
   });
@@ -54,7 +54,7 @@ describe('Stream Logger', function () {
 
         // collect everything that is written to console.error
         let flushedOutput = '';
-        stub(console, 'error', function (str) {
+        sandbox.stub(console, 'error').callsFake(function (str) {
           flushedOutput += str;
         });
 
@@ -71,7 +71,7 @@ describe('Stream Logger', function () {
     } else {
       it('does not fall apart with non streams2 streams', function () {
         let exitHandler;
-        stub(process, 'once', function (event, handler) {
+        sandbox.stub(process, 'once').callsFake(function (event, handler) {
           if (event === 'exit') {
             exitHandler = handler;
           }

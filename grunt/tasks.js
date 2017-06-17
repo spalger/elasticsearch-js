@@ -14,7 +14,8 @@ module.exports = function (grunt) {
   grunt.registerTask('test', function (branch) {
     const tasks = [
       branch ? 'run:generate_' + branch : 'run:generate',
-      'mochacov:unit'
+      'mochacov:unit',
+      'run:browser_tests'
     ];
 
     const branches = branch ? [branch] : utils.branches;

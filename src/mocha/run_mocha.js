@@ -1,5 +1,12 @@
-const debugFlags = ['--debug', '--debug-brk', '-d', '--inspect'];
-const debugInBand = process.argv.some(arg => debugFlags.includes(arg));
+const debugInBand = process.execArgv.some(arg => {
+  switch (arg) {
+    case '--debug':
+    case '--debug-brk':
+    case '-d':
+    case '--inspect':
+      return true;
+  }
+});
 
 process.argv.push('-r', require.resolve('./mocha_setup'));
 

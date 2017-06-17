@@ -41,6 +41,9 @@ const config = {
   },
   release_bower_tag: {
     exec: 'node ./scripts/release/bower'
+  },
+  browser_tests: {
+    exec: 'node ./scripts/browser_tests'
   }
 };
 

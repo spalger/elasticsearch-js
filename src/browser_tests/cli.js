@@ -36,6 +36,11 @@ yargs
     type: 'boolean',
     description: 'for people who love console.log'
   })
+  .option('color', {
+    type: 'boolean',
+    description: 'set to false to disable colorized output',
+    default: true,
+  })
   .command({
     command: 'server',
     description: 'start the server and chrome but do not run tests',

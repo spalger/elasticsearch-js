@@ -1,5 +1,4 @@
-import chalk from 'chalk';
-
+import { color } from '../color';
 import { log, indent } from '../log';
 
 export function logFailures(tests) {
@@ -18,8 +17,8 @@ export function logFailures(tests) {
   failures.forEach(test => {
     log.info(indent(2, test.getPath()));
     log.info(indent(4, test.getTitle()));
-    log.info(indent(6, chalk.red(test.error.message)));
-    log.info(indent(8, chalk.grey(
+    log.info(indent(6, color.red(test.error.message)));
+    log.info(indent(8, color.grey(
       test.error.stack
         .split('\n')
         .slice(1)

@@ -15,6 +15,7 @@ module.exports = function (grunt) {
     const tasks = [
       branch ? 'run:generate_' + branch : 'run:generate',
       'mochacov:unit',
+      'run:build_browser_clients',
       'run:browser_tests'
     ];
 

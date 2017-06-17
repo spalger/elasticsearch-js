@@ -1,44 +1,43 @@
 import { format } from 'util';
-import { PassThrough } from 'stream';
 
-import chalk from 'chalk';
 import ProgressBar from 'progress';
 
-import { testLogLevel, indent } from '../log';
+import { color } from '../color';
+import { log, testLogLevel, indent } from '../log';
 
 export class ProgressLogger {
   currentTest;
   lastTestMention;
 
   start(total) {
-    const stream = testLogLevel('info') ? process.stdout : new PassThrough().resume();
-    this.bar = new ProgressBar('running tests [:bar] :current/:total :percent', {
-      total,
-      clear: true,
-      stream,
-      width: Math.round(process.stdout.columns / 3)
-    });
+    if (process.stdout.isTTY && testLogLevel('info')) {
+      this.bar = new ProgressBar('running tests [:bar] :current/:total :percent', {
+        total,
+        clear: true,
+        width: Math.round(process.stdout.columns / 3)
+      });
+    }
   }
 
   end() {
     this.currentTest = undefined;
     if (this.lastTestMention) {
-      process.stdout.write('\n');
+      log.info('');
       this.lastTestMention = undefined;
     }
   }
 
   testMention(message) {
-    if (this.lastTestMention !== this.currentTest) {
+    if (this.currentTest && this.lastTestMention !== this.currentTest) {
       this.lastTestMention = this.currentTest;
-      this.bar.interrupt('\n' + this.currentTest.getFullTitle());
+      this.interrupt('\n' + this.currentTest.getFullTitle());
     }
 
-    this.bar.interrupt(indent(2, message));
+    this.interrupt(indent(2, message));
   }
 
   consoleCall(method, args) {
-    this.testMention(format(chalk.grey(`console.${method}:`), ...args));
+    this.testMention(format(color.grey(`console.${method}:`), ...args));
   }
 
   testUpdate(test) {
@@ -48,16 +47,30 @@ export class ProgressLogger {
         break;
 
       case 'passed':
-        this.bar.tick();
+        this.tick();
         break;
 
       case 'failed':
-        this.bar.tick();
-        this.testMention(chalk.red('𝘅 fail'));
+        this.tick();
+        this.testMention(color.red('𝘅 fail'));
         break;
 
       default:
         throw new Error('unknown test state ' + test.state);
+    }
+  }
+
+  tick() {
+    if (this.bar) {
+      this.bar.tick();
+    }
+  }
+
+  interrupt(msg) {
+    if (this.bar) {
+      this.bar.interrupt(msg);
+    } else {
+      log.info(msg);
     }
   }
 }

@@ -1,13 +1,12 @@
-import chalk from 'chalk';
-
+import { color } from '../color';
 import { log } from '../log';
 
-function color(fn, num) {
+function colorByNumber(fn, num) {
   if (num > 0) {
     return fn(num);
   }
 
-  return chalk.grey(num);
+  return color.grey(num);
 }
 
 export function logSummary(stats) {
@@ -16,12 +15,12 @@ export function logSummary(stats) {
   const logFn = failed ? log.error : log.info;
 
   if (failed) {
-    logFn(chalk.red('𝘅 complete with failures'));
+    logFn(color.red('𝘅 complete with failures'));
   } else {
-    logFn(chalk.green('✔ complete'));
+    logFn(color.green('✔ complete'));
   }
-  logFn('  pass:', color(chalk.green, stats.passes));
-  logFn('  fail:', color(chalk.red, stats.failures));
-  logFn('  pending:', color(chalk.cyan, stats.pending));
+  logFn('  pass:', colorByNumber(color.green, stats.passes));
+  logFn('  fail:', colorByNumber(color.red, stats.failures));
+  logFn('  pending:', colorByNumber(color.cyan, stats.pending));
   logFn('');
 }

@@ -3,6 +3,7 @@ import {
   runTests,
   setLogLevel,
   log,
+  setColorEnabled,
 } from './lib';
 
 /**
@@ -20,6 +21,7 @@ export function main(cmd, action) {
     else if (cmd.verbose) setLogLevel('verbose');
     else setLogLevel('info');
 
+    setColorEnabled(cmd.color);
     await action(cmd);
   })
   .catch(error => {

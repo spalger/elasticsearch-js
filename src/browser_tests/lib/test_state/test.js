@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { color } from '../color';
 
 export class Test {
   constructor(properties) {
@@ -6,11 +6,11 @@ export class Test {
   }
 
   getPath() {
-    return chalk.grey(this.path.join(' ≫ '));
+    return color.grey(this.path.join(' ≫ '));
   }
 
   getTitle() {
-    return chalk.white(this.title);
+    return color.white(this.title);
   }
 
   getFullTitle() {

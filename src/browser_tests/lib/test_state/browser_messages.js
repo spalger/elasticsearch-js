@@ -10,13 +10,11 @@ export function observeBrowserMessages(remote) {
       remote.Runtime.evaluate({
         expression: `
           new Promise(function (resolve, reject) {
-            var messages = window.__msgs__ = window.__msgs__ || [];
-            var queue = window.__msgq__ = window.__msgq__ || [];
-            
-            if (messages.length) {
-              resolve(messages.shift())
+            var events = window.__runnerEvents__ = window.__runnerEvents__ || [];
+            if (events.length && typeof events[0] !== 'function') {
+              resolve(events.shift())
             } else {
-              queue.push(resolve)
+              events.push(resolve)
             }
           })
         `,

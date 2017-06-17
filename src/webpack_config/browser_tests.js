@@ -11,10 +11,10 @@ const OUTPUT_DIR = rel('tmp/browser_tests');
 module.exports = {
   context: CONTEXT_DIR,
   entry: {
-    angular: ['./harness/setup', './entry/angular.js', './harness/run'],
-    browser: ['./harness/setup', './entry/browser.js', './harness/run'],
-    jquery: ['./harness/setup', './entry/jquery.js', './harness/run'],
-    unit: ['./harness/setup', './entry/unit.js', './harness/run'],
+    angular: ['./test_harness', './entry/angular.js'],
+    browser: ['./test_harness', './entry/browser.js'],
+    jquery: ['./test_harness', './entry/jquery.js'],
+    unit: ['./test_harness', './entry/unit.js'],
   },
   output: {
     path: OUTPUT_DIR,

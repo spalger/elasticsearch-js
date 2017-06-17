@@ -46,7 +46,7 @@ const serializeTest = (test) => ({
 });
 
 sendMsg({
-  type: 'start',
+  type: 'runner:start',
   payload: {
     total: runner.total
   }

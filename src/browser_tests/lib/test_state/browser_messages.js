@@ -2,12 +2,12 @@ import Rx from 'rxjs/Rx';
 
 import { log } from '../log';
 
-export function observeBrowserMessages(client) {
+export function observeBrowserMessages(remote) {
   return new Rx.Observable(observer => {
     let open = true;
 
     function read() {
-      client.Runtime.evaluate({
+      remote.Runtime.evaluate({
         expression: `
           new Promise(function (resolve, reject) {
             var messages = window.__msgs__ = window.__msgs__ || [];

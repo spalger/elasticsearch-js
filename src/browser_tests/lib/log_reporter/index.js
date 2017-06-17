@@ -1,1 +1,1 @@
-export { createLogReporter } from './log_reporter';
+export { logReporter } from './log_reporter';

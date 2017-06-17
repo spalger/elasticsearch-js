@@ -1,9 +1,8 @@
 import Rx from 'rxjs/Rx';
 
 import { log } from '../log';
-import { observeBrowserMessages } from './browser_messages';
 
-export function observePageEvents(remote) {
+export function observeRuntimeEvents(remote) {
   return Rx.Observable.merge(
     Rx.Observable
       .fromEvent(remote, 'Runtime.exceptionThrown')
@@ -24,7 +23,5 @@ export function observePageEvents(remote) {
         }
       }))
       .do(event => log.verbose('Runtime.consoleAPICalled =>', event)),
-
-    observeBrowserMessages(remote),
   );
 }

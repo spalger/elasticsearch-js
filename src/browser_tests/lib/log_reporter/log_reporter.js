@@ -1,66 +1,64 @@
-import { createLogFailureObserver } from './log_failure_observer';
+import Rx from 'rxjs/Rx';
+
+import { logFailures } from './log_failures';
 import { ProgressLogger } from './progress_logger';
 import { logSummary } from './log_summary';
 
-export function createLogReporter(testState$) {
+export async function logReporter(testState$) {
+  testState$ = testState$
+    .publishReplay(1)
+    .refCount();
+
   const progress = new ProgressLogger();
 
-  /**
-   *  Provides a single value, the first state of the tests once
-   *  started, then completes
-   *
-   *  @type {Rx.Observable}
-   */
-  const initialState$ = testState$
-    .filter(state => state.started)
-    .first()
-    .do(state => progress.start(state.total));
+  const initialState$ = testState$.first();
+  const finalState$ = testState$.last();
 
   /**
-   *  Provides a single value, the final state of the tests, then
-   *  completes
-   *
-   *  @type {Rx.Observable}
+   *  Starts the progress router on the first testState
+   *  @type {[type]}
    */
-  const finalState$ = testState$
-    .filter(state => state.complete)
-    .first()
+  const startProgress$ = initialState$
+    .do(state => progress.start(state.total))
     .share();
 
   /**
    *  Sends console.foo() calls to the progress logger
    *  @type {Rx.Observable}
    */
-  const consoleCallLogging$ = testState$
-    .map(state => state.consoleCalls && state.consoleCalls[state.consoleCalls.length - 1])
-    .distinctUntilChanged()
-    .takeUntil(finalState$)
-    .filter(Boolean)
-    .do(call => {
-      progress.consoleCall(call.method, call.args);
-    });
+  const consoleCallLogging$ = startProgress$.concat(
+    testState$
+      .map(state => state.consoleCalls && state.consoleCalls[state.consoleCalls.length - 1])
+      .distinctUntilChanged()
+      .takeUntil(finalState$)
+      .filter(Boolean)
+      .do(call => {
+        progress.consoleCall(call.method, call.args);
+      })
+  );
 
   /**
    *  Logs a progress indicator to the console for each test added
    *  to the tests state
-   *
    *  @type {Rx.Observable}
    */
-  const testLogging$ = testState$
-    .mergeMap(state => state.tests)
-    .groupBy(test => test.id)
-    .mergeMap(group => group.distinctUntilChanged())
-    .takeUntil(finalState$)
-    .do(test => {
-      progress.testUpdate(test);
-    });
+  const testLogging$ = startProgress$.concat(
+    testState$
+      .mergeMap(state => state.tests)
+      .groupBy(test => test.id)
+      .mergeMap(group => group.distinctUntilChanged())
+      .takeUntil(finalState$)
+      .do(test => {
+        progress.testUpdate(test);
+      })
+  );
 
   /**
    *  Represents the all progress logging
    *  @type {Rx.Observable}
    */
-  const progressLogging$ = consoleCallLogging$
-    .merge(testLogging$)
+  const progressLogging$ = Rx.Observable
+    .merge(consoleCallLogging$, testLogging$)
     .do({
       complete() {
         progress.end();
@@ -68,39 +66,14 @@ export function createLogReporter(testState$) {
     });
 
   /**
-   *  Logs a failure indicator for all failed tests after the final
-   *  state is chosen
-   *
+   *  Logs a summary about execution after the progressLogging$ is done
    *  @type {Rx.Observable}
    */
-  const failures$ = finalState$
-    .mergeMap(state => state.tests)
-    .do(createLogFailureObserver())
-    .share();
-
-  /**
-   *  Logs a summary about execution (waits for the failure$ stream
-   *  to complete first)
-   *
-   *  @type {Rx.Observable}
-   */
-  const summary$ = failures$
+  const completionLogging$ = progressLogging$
     .ignoreElements()
-    .concat(finalState$)
-    .map(state => state.stats)
-    .do(logSummary);
+    .concat(testState$.last())
+    .do(state => logFailures(state.tests))
+    .do(state => logSummary(state.stats));
 
-  /**
-   *  Simple class exposes a promise that resolves
-   *  once the tests are complete and the reporter is
-   *  done reporting about them
-   */
-  return new class Reporter {
-    async done() {
-      await initialState$
-        .merge(progressLogging$)
-        .merge(summary$)
-        .toPromise();
-    }
-  };
+  await completionLogging$.toPromise();
 }

@@ -1,3 +1,4 @@
+require('../babel/register');
 require('bluebird').longStackTraces();
 if (process.env.COVERAGE) {
   require('blanket')({

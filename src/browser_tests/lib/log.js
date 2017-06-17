@@ -7,6 +7,16 @@ const levels = [
   'verbose',
 ];
 
+export function indent(columns, text) {
+  const margin = ' '.repeat(columns);
+  text = String(text || '');
+  if (!text) return text;
+  return text
+    .split('\n')
+    .map(line => margin + line)
+    .join('\n');
+}
+
 export function setLogLevel(newLevel) {
   if (!levels.includes(newLevel)) {
     throw new Error(`invalid log level ${newLevel}`);

@@ -27,16 +27,20 @@ export function main(cmd, action) {
   });
 }
 
+function keepServerRunning() {
+  return new Promise(() => {
+    log.info('Server running, use `node scripts/browser_tests runner` to run the tests');
+    // never resolve, just wait until the process is closed
+  });
+}
+
 /**
  *  Start the server and wait for the process to end
  *  @param  {Command} cmd
  *  @return {Promise<undefined>}
  */
-export async function serverAction(cmd) {
-  await withServer(cmd.url, cmd.chromePort, () => new Promise(() => {
-    log.info('Server running, use `node scripts/browser_tests runner` to run the tests');
-    // never resolve, just wait until the process is closed
-  }));
+export async function serverAction(cmd, subAction = keepServerRunning) {
+  await withServer(cmd.url, cmd.chromePort, subAction);
 }
 
 /**
@@ -45,7 +49,9 @@ export async function serverAction(cmd) {
  *  @return {Promise<undefined>}
  */
 export async function testsAction(cmd) {
-  await runTests(cmd.url, cmd.chromePort);
+  const stats = await runTests(cmd.url, cmd.chromePort);
+  const failureCount = stats.reduce((acc, s) => acc + s.failures, 0);
+  process.exitCode = failureCount;
 }
 
 /**
@@ -54,8 +60,8 @@ export async function testsAction(cmd) {
  *  @return {Promise<undefined>}
  */
 export async function serverAndTestsAction(cmd) {
-  await withServer(cmd.url, cmd.chromePort, async () => {
-    await runTests(cmd.url, cmd.chromePort);
+  await serverAction(cmd, async () => {
+    await testsAction(cmd);
   });
 }
 

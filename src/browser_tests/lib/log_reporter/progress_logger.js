@@ -4,17 +4,7 @@ import { PassThrough } from 'stream';
 import chalk from 'chalk';
 import ProgressBar from 'progress';
 
-import { testLogLevel } from '../log';
-
-function indent(columns, text) {
-  const margin = ' '.repeat(columns);
-  text = String(text || '');
-  if (!text) return text;
-  return text
-    .split('\n')
-    .map(line => margin + line)
-    .join('\n');
-}
+import { testLogLevel, indent } from '../log';
 
 export class ProgressLogger {
   currentTest;

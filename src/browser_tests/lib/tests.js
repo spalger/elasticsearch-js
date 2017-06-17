@@ -21,7 +21,7 @@ export async function runTests(serverUrl, chromePort) {
 
   for (const url of URLS) {
     log.info('');
-    log.info('testing', url);
+    log.info('running tests at', url);
 
     await withChromeRemote(chromePort, url, async remote => {
       const testState$ = observeTestState(remote).share();

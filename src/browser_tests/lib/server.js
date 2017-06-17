@@ -9,8 +9,8 @@ import { withWebpackMiddleware } from './webpack_middleware';
 import { log } from './log';
 
 export async function withServer(url, chromePort, block) {
-  await withChrome(chromePort, async () => {
-    await withWebpackMiddleware(async (webpackMiddleware) => {
+  await withWebpackMiddleware(async (webpackMiddleware) => {
+    await withChrome(chromePort, async () => {
       let server;
       try {
         const { port } = parseUrl(url);
